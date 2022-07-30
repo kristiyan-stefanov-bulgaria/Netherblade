@@ -17,7 +17,6 @@ import com.hawolt.yaml.objects.YamlRegion;
 import com.hawolt.yaml.objects.YamlServers;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -169,6 +168,7 @@ public class Netherblade {
                         builder.append(header).append(": ").append(response.getHeaders().get(header)).append(System.lineSeparator());
                     }
                     builder.append(new String(response.getBody())).append(System.lineSeparator());
+                    System.out.println(builder);
                     return response;
                 }
 
