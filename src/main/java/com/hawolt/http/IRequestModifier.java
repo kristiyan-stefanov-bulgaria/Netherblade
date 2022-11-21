@@ -1,7 +1,7 @@
 package com.hawolt.http;
 
-import com.hawolt.proxy.ProxyRequest;
-import com.hawolt.proxy.ProxyResponse;
+import com.hawolt.http.proxy.ProxyRequest;
+import com.hawolt.http.proxy.ProxyResponse;
 
 /**
  * Created: 30/07/2022 16:02
