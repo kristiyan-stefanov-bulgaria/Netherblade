@@ -2,15 +2,10 @@ package com.hawolt.socket;
 
 import com.hawolt.logger.Logger;
 import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.util.Collections;
 
 /**
  * Created: 19/11/2022 21:19

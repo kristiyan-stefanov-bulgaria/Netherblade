@@ -66,10 +66,9 @@ public class LocalExecutor {
             Logger.error(e);
         }
         Map<String, BasicProxyServer> map = new HashMap<>();
-        JSONObject system = SystemYaml.config.getJSONObject("EUW");
+        JSONObject system = SystemYaml.config.getJSONObject(context.pathParam("region"));
         map.put("config", new BasicProxyServer(StaticConstants.PORT_MAPPING.get("config"), system.getString("config")));
         for (String type : system.keySet()) {
-            //   if (!options.getBoolean("active")) continue;
             if (type.equalsIgnoreCase("config")) continue;
             map.put(type, new BasicProxyServer(StaticConstants.PORT_MAPPING.get(type), system.getString(type)));
             Logger.debug("Proxy {}:{} on {}:{}", type.toUpperCase(), system.getString(type), "http://127.0.0.1", StaticConstants.PORT_MAPPING.get(type));
@@ -84,8 +83,6 @@ public class LocalExecutor {
             public ProxyResponse onResponse(ProxyResponse response) {
                 String plain = new String(response.getBody());
                 for (String type : system.keySet()) {
-                    //JSONObject options = types.getJSONObject(type);
-                    //if (!options.getBoolean("active")) continue;
                     String target = system.getString(type);
                     String replacement = String.format("http://127.0.0.1:%d", StaticConstants.PORT_MAPPING.get(type));
                     plain = plain.replaceAll(target, replacement);
@@ -100,82 +97,6 @@ public class LocalExecutor {
                 Logger.error(e);
             }
         }, "GET");
-
-       /* map.get("auth").register(new IRequestModifier() {
-            private String cookie;
-
-            @Override
-            public ProxyRequest onBeforeRequest(ProxyRequest request) {
-                if (cookie != null) request.addHeader("Cookie", cookie);
-                return request;
-            }
-
-            @Override
-            public ProxyResponse onResponse(ProxyResponse response) {
-                for (Map.Entry<String, List<String>> entry : response.getHeaders().entrySet()) {
-                    if (entry.getKey().equalsIgnoreCase("Set-Cookie")) {
-                        List<String> list = entry.getValue();
-                        StringBuilder builder = new StringBuilder();
-                        for (String value : list) {
-                            builder.append(value.split(";")[0]).append("; ");
-                        }
-                        cookie = builder.toString();
-                    }
-                }
-                return response;
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-        }, "POST", "PUT");*/
-
-       /* BasicProxyServer tmp = new BasicProxyServer(2269, "https://auth.riotgames.com");
-        tmp.register(new IRequestModifier() {
-            private String __cf_bm;
-
-            @Override
-            public ProxyRequest onBeforeRequest(ProxyRequest request) {
-                if (request.getMethod() == Method.POST && request.getUrl().equals("https://auth.riotgames.com/api/v1/authorization"))
-                    request.setBody("{\"acr_values\":\"urn:riot:bronze\",\"claims\":\"\",\"client_id\":\"lol\",\"code_challenge\":\"\",\"code_challenge_method\":\"\",\"nonce\":\"46GdUkLGveInsOR7Exx2aA\",\"redirect_uri\":\"http://localhost/redirect\",\"response_type\":\"token id_token\",\"scope\":\"openid link ban lol_region account\"}");
-                if (__cf_bm != null)
-                    request.addHeader("Cookie", __cf_bm);
-                return request;
-            }
-
-            @Override
-            public ProxyResponse onResponse(ProxyResponse response) {
-                Request request = response.getRequest();
-                StringBuilder builder = new StringBuilder();
-                builder.append(request.getMethod().name()).append(" ").append(request.getEndpoint()).append(System.lineSeparator());
-                for (String header : request.getHeaders().keySet()) {
-                    builder.append(header).append(": ").append(request.getHeaders().get(header)).append(System.lineSeparator());
-                }
-                if (request.getBody() != null) {
-                    builder.append(request.getBody().toString()).append(System.lineSeparator());
-                }
-                builder.append("Response: ").append(response.getCode()).append(System.lineSeparator());
-                for (String header : response.getHeaders().keySet()) {
-
-                    if ("Set-Cookie".equalsIgnoreCase(header)) {
-                        System.out.println("COOKIE?");
-                        if (request.getEndpoint().equals("https://auth.riotgames.com/api/v1/authorization"))
-                            __cf_bm = response.getHeaders().get(header).get(0);
-                        Logger.error("__cf_bm={}", __cf_bm);
-                    }
-                    builder.append(header).append(": ").append(response.getHeaders().get(header)).append(System.lineSeparator());
-                }
-                builder.append(new String(response.getBody())).append(System.lineSeparator());
-                System.out.println(builder);
-                return response;
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-        }, SUPPORTED);*/
 
         for (String key : map.keySet()) {
             BasicProxyServer server = map.get(key);
@@ -233,7 +154,6 @@ public class LocalExecutor {
                     received.put("body", response.getBody() != null ? new String(response.getBody()) : JSONObject.NULL);
                     object.put("received", received);
 
-                    //System.out.println(object);
                     SocketServer.forward(object.toString());
                     return response;
                 }
@@ -246,20 +166,3 @@ public class LocalExecutor {
         }
     };
 }
-/*
-
-                    StringBuilder builder = new StringBuilder();
-                    builder.append(request.getMethod().name()).append(" ").append(request.getEndpoint()).append(System.lineSeparator());
-                    for (String header : request.getHeaders().keySet()) {
-                        builder.append(header).append(": ").append(request.getHeaders().get(header)).append(System.lineSeparator());
-                    }
-                    if (request.getBody() != null) {
-                        builder.append(request.getBody().toString()).append(System.lineSeparator());
-                    }
-                    builder.append("Response: ").append(response.getCode()).append(System.lineSeparator());
-                    for (String header : response.getHeaders().keySet()) {
-                        builder.append(header).append(": ").append(response.getHeaders().get(header)).append(System.lineSeparator());
-                    }
-                    builder.append(new String(response.getBody())).append(System.lineSeparator());
-                    System.out.println(builder);
- */

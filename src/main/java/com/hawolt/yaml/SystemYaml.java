@@ -1,19 +1,14 @@
 package com.hawolt.yaml;
 
-import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.hawolt.logger.Logger;
 import com.hawolt.util.LocaleInstallation;
-import com.hawolt.util.StaticConstants;
 import com.hawolt.yaml.objects.YamlRegion;
 import com.hawolt.yaml.objects.YamlServers;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,8 +47,6 @@ public class SystemYaml {
             region.put("queue", yamlServers.getQueue());
             region.put("ledge", yamlServers.getLedge());
             region.put("platform", yamlServers.getPlatform());
-            //RiotClient does Certificate Pinning, unable to MITM
-            //region.put("auth", StaticConstants.AUTH_URL);
             object.put(yamlRegion.getName(), region);
         }
         return object;

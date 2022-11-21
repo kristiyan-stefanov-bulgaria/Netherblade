@@ -1,13 +1,5 @@
 package com.hawolt.http.proxy;
 
-import com.hawolt.logger.Logger;
-import okhttp3.Headers;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

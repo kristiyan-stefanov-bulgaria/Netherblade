@@ -1,6 +1,5 @@
 package com.hawolt.ui;
 
-import com.hawolt.ui.Graphics2DComponent;
 import me.friwi.jcefmaven.EnumProgress;
 import me.friwi.jcefmaven.IProgressHandler;
 
