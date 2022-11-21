@@ -23,7 +23,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.hawolt.Soundcloud</mainClass>
+                            <mainClass>com.hawolt.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
