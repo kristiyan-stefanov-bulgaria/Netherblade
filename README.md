@@ -12,15 +12,4 @@ Netherblade allows you to look behind the curtain and see requests executed by t
 
 ### Running the project
 
-when running this project for the first time you are required to generate two files, this can either be done by hand or by running Netherblade with specific arguments.
-
-
-to generate `system.json` run Netherblade using  
-`--yaml "path-to-league-system.yaml"`
-
-
-to generate `netherblade-config.json` run Netherblade using  
-`--init`
-
-
-afterwards you can launch Netherblade and redirect output to a file to view requests done by the LCU.
+either build it yourself or head to the release section and download the latest precompiled version
