@@ -4,3 +4,5 @@
 target/*
 # log files
 debug.log
+# config files
+instructions.json
