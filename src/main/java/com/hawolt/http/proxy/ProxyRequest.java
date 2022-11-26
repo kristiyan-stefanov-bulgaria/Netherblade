@@ -14,17 +14,14 @@ import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created: 30/07/2022 16:37
  * Author: Twitter @hawolt
  **/
 
-public class ProxyRequest {
+public class ProxyRequest implements IRequest {
 
     private final Map<String, String> headers = new HashMap<>();
     private final String method, url;
@@ -108,6 +105,20 @@ public class ProxyRequest {
         this.body = body;
     }
 
+    @Override
+    public String url() {
+        return url;
+    }
+
+    @Override
+    public Map<String, List<String>> getHeaders() {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String key : headers.keySet()) {
+            map.put(key, Collections.singletonList(headers.get(key)));
+        }
+        return map;
+    }
+
     public String getBody() {
         return body;
     }
@@ -116,7 +127,7 @@ public class ProxyRequest {
         return url;
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, String> getOriginalHeaders() {
         return headers;
     }
 

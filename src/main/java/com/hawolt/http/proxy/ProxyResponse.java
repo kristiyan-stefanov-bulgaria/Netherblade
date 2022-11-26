@@ -8,7 +8,7 @@ import java.util.Map;
  * Author: Twitter @hawolt
  **/
 
-public class ProxyResponse {
+public class ProxyResponse implements IRequest {
     private final Map<String, List<String>> headers;
     private final ProxyRequest original;
     private byte[] body;
@@ -33,7 +33,7 @@ public class ProxyResponse {
         this.code = code;
     }
 
-    public byte[] getBody() {
+    public byte[] getByteBody() {
         return body;
     }
 
@@ -43,5 +43,20 @@ public class ProxyResponse {
 
     public Map<String, List<String>> getHeaders() {
         return headers;
+    }
+
+    @Override
+    public String getBody() {
+        return new String(body);
+    }
+
+    @Override
+    public void setBody(String in) {
+        this.body = in.getBytes();
+    }
+
+    @Override
+    public String url() {
+        return original.url();
     }
 }

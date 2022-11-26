@@ -63,7 +63,7 @@ public class BasicProxyServer {
         }
         ProxyResponse complete = Objects.requireNonNull(response);
         context.status(complete.getCode());
-        String content = new String(complete.getBody());
+        String content = new String(complete.getByteBody());
         context.header("Content-Length", String.valueOf(content.length()));
         String type = context.header("Content-Type");
         if (type != null) context.header("Content-Type", type);

@@ -1,6 +1,5 @@
 package com.hawolt.mitm.impl;
 
-import com.hawolt.http.proxy.ProxyRequest;
 import com.hawolt.http.proxy.ProxyResponse;
 import com.hawolt.mitm.CommunicationType;
 import com.hawolt.mitm.RewriteModule;
@@ -13,21 +12,21 @@ import java.util.List;
  * Author: Twitter @hawolt
  **/
 
-public class RequestModule extends RewriteModule<ProxyRequest> {
+public class ResponseModule extends RewriteModule<ProxyResponse> {
 
 
     @Override
-    protected ProxyRequest rewriteHeaders(ProxyRequest communication, RewriteRule rule) {
+    protected ProxyResponse rewriteHeaders(ProxyResponse communication, RewriteRule rule) {
         return null;
     }
 
     @Override
-    protected ProxyRequest rewriteQuery(ProxyRequest communication, RewriteRule rule) {
+    protected ProxyResponse rewriteQuery(ProxyResponse communication, RewriteRule rule) {
         return null;
     }
 
     @Override
-    protected ProxyRequest rewriteURL(ProxyRequest communication, RewriteRule rule) {
+    protected ProxyResponse rewriteURL(ProxyResponse communication, RewriteRule rule) {
         return null;
     }
 }

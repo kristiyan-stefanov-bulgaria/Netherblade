@@ -4,6 +4,9 @@ import com.hawolt.http.proxy.BasicProxyServer;
 import com.hawolt.http.proxy.ProxyRequest;
 import com.hawolt.http.proxy.ProxyResponse;
 import com.hawolt.logger.Logger;
+import com.hawolt.mitm.CommunicationType;
+import com.hawolt.mitm.Unsafe;
+import com.hawolt.mitm.rule.RuleInterpreter;
 import com.hawolt.socket.SocketServer;
 import com.hawolt.util.LocaleInstallation;
 import com.hawolt.util.StaticConstants;
@@ -34,6 +37,9 @@ public class LocalExecutor {
             path("/client", () -> {
                 get("/available", LocalExecutor.AVAILABLE);
                 get("/launch/{region}", LocalExecutor.LAUNCH);
+            });
+            path("/config", () -> {
+                get("/load", RuleInterpreter.RELOAD);
             });
         });
     }
@@ -81,7 +87,7 @@ public class LocalExecutor {
 
             @Override
             public ProxyResponse onResponse(ProxyResponse response) {
-                String plain = new String(response.getBody());
+                String plain = new String(response.getByteBody());
                 for (String type : system.keySet()) {
                     String target = system.getString(type);
                     String replacement = String.format("http://127.0.0.1:%d", StaticConstants.PORT_MAPPING.get(type));
@@ -107,7 +113,8 @@ public class LocalExecutor {
                 }
 
                 @Override
-                public ProxyResponse onResponse(ProxyResponse response) {
+                public ProxyResponse onResponse(ProxyResponse o) {
+                    ProxyResponse response = Unsafe.cast(RuleInterpreter.map.get(CommunicationType.INGOING).rewrite(Unsafe.cast(o)));
                     ProxyRequest request = response.getOriginal();
                     JSONObject object = new JSONObject();
                     JSONObject sent = new JSONObject();
@@ -127,7 +134,7 @@ public class LocalExecutor {
                     sent.put("uri", data[0]);
                     sent.put("query", query);
                     JSONArray headers1 = new JSONArray();
-                    for (Map.Entry<String, String> entry : request.getHeaders().entrySet()) {
+                    for (Map.Entry<String, String> entry : request.getOriginalHeaders().entrySet()) {
                         JSONObject header = new JSONObject();
                         header.put("k", entry.getKey());
                         header.put("v", entry.getValue());
@@ -151,7 +158,7 @@ public class LocalExecutor {
                         }
                     }
                     received.put("headers", headers2);
-                    received.put("body", response.getBody() != null ? new String(response.getBody()) : JSONObject.NULL);
+                    received.put("body", response.getByteBody() != null ? new String(response.getByteBody()) : JSONObject.NULL);
                     object.put("received", received);
 
                     SocketServer.forward(object.toString());

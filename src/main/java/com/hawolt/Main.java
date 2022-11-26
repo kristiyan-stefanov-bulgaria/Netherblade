@@ -2,6 +2,7 @@ package com.hawolt;
 
 import com.hawolt.http.LocalExecutor;
 import com.hawolt.logger.Logger;
+import com.hawolt.mitm.rule.RuleInterpreter;
 import com.hawolt.socket.SocketServer;
 import com.hawolt.ui.Netherblade;
 import com.hawolt.util.ReflectHttp;
@@ -28,6 +29,7 @@ public class Main {
                     .start(35199);
             SocketServer.launch();
             Netherblade.create();
+            RuleInterpreter.reload(null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Logger.error(e);
             System.err.println("Unable to modify permitted HTTP methods, exiting (1).");
