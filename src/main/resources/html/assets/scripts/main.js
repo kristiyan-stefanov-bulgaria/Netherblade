@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     fetch('http://localhost:35199/v1/client/available')
         .then((response) => response.json())
         .then((data) => {
@@ -23,7 +23,7 @@ window.onload = function() {
         }
     });
     var search = document.getElementById('search');
-    search.addEventListener('keyup', function() {
+    search.addEventListener('keyup', function () {
         var display = document.getElementById('display');
         var children = display.childNodes;
         var query = search.value;
@@ -57,7 +57,8 @@ function flip(e) {
 }
 
 function launch() {
-    fetch('http://localhost:35199/v1/client/launch/EUW')
+    const region = document.getElementById('regions').value;
+    fetch('http://localhost:35199/v1/client/launch/' + region)
         .then((response) => response.text())
         .then((text) => {
             console.log(text);
@@ -69,13 +70,13 @@ function launch() {
 
 function connect(host) {
     let socket = new WebSocket(host);
-    socket.onopen = function(msg) {
+    socket.onopen = function (msg) {
         console.log("Connected to " + host);
     };
-    socket.onmessage = function(msg) {
+    socket.onmessage = function (msg) {
         append(JSON.parse(msg.data));
     };
-    socket.onclose = function(msg) {
+    socket.onclose = function (msg) {
         console.log("disconnected from " + host);
     };
 }
@@ -142,6 +143,7 @@ function left(request) {
         param.innerHTML = key + ": " + value;
         parameters.appendChild(param);
     }
+    left.appendChild(parameters);
     const headers = document.createElement("div");
     headers.className = "request-group";
     headers.appendChild(header("HEADERS", "cp-headers"));
