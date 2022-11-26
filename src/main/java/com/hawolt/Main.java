@@ -9,6 +9,7 @@ import com.hawolt.util.ReflectHttp;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -30,6 +31,8 @@ public class Main {
             SocketServer.launch();
             Netherblade.create();
             RuleInterpreter.reload(null);
+        } catch (FileNotFoundException e) {
+            System.err.println("instructions.json not present.");
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Logger.error(e);
             System.err.println("Unable to modify permitted HTTP methods, exiting (1).");
