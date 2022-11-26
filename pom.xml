@@ -6,7 +6,7 @@
 
     <groupId>com.hawolt</groupId>
     <artifactId>Netherblade</artifactId>
-    <version>1.101</version>
+    <version>1.110</version>
 
     <build>
         <plugins>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.github.hawolt.hawolt-core</groupId>
             <artifactId>Logger</artifactId>
-            <version>1f32a8e9bb</version>
+            <version>93a8a603ad</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
