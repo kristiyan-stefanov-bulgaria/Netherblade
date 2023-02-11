@@ -2,8 +2,9 @@ package com.hawolt.mitm.rule;
 
 import com.hawolt.logger.Logger;
 import org.json.JSONObject;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,15 +51,22 @@ public class RewriteRule implements IRewrite {
                 break;
             case REGEX:
                 Matcher matcher = pattern.matcher(in);
-                if (!matcher.find()) break;
                 StringBuilder builder = new StringBuilder(in);
-                for (int i = matcher.groupCount(); i >= 1; i--) {
-                    String target = matcher.group(i);
-                    int start = matcher.start(i);
-                    builder.replace(start, start + target.length(), replacement);
-                    Logger.debug("[{}-RULE] {}:{} -> {}", type.name(), plain, target, replacement);
+                List<Replacement> list = new ArrayList<>();
+                while (matcher.find()) {
+                    for (int i = matcher.groupCount(); i >= 1; i--) {
+                        String target = matcher.group(i);
+                        if (target == null) continue;
+                        int start = matcher.start(i);
+                        list.add(new Replacement(start, start + target.length(), replacement));
+                    }
+                }
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    Replacement rule = list.get(i);
+                    builder.replace(rule.getStart(), rule.getEnd(), rule.getReplacement());
                 }
                 in = builder.toString();
+                Logger.debug("[{}-RULE] {}:{} -> {}", type.name(), plain, target, replacement);
                 break;
             case UNKNOWN:
                 break;
