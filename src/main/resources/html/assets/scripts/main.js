@@ -26,14 +26,33 @@ window.onload = function () {
     search.addEventListener('keyup', filter);
 }
 
+function call(url) {
+    fetch(url)
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+function dispose() {
+    call('http://localhost:35199/v1/config/close');
+}
+
+function config() {
+    call('http://localhost:35199/v1/config/load');
+}
+
+function wipe() {
+    document.getElementById('display').innerHTML = "";
+}
+
 function filter() {
     var display = document.getElementById('display');
     var children = display.childNodes;
-    var query = search.value;
+    var query = search.value.toLowerCase();
     for (var i = 0; i < children.length; i++) {
         var ref = children[i];
         if (ref.outerHTML === undefined) continue;
-        var source = ref.outerHTML;
+        var source = ref.outerHTML.toLowerCase();
         if (source.includes(query)) {
             if (ref.classList.contains("hidden")) ref.classList.remove("hidden")
         } else {

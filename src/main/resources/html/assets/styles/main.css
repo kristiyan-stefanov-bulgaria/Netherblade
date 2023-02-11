@@ -41,13 +41,24 @@ html, body {
     height: 28px;
 }
 
-.launcher {
+.ui-button {
     border-radius: 8px;
-    width: 150px;
     height: 30px;
 }
 
-.launcher:hover {
+.tiny {
+    min-width: 30px;
+}
+
+.medium {
+    min-width: 100px;
+}
+
+.big {
+    min-width: 125px;
+}
+
+.ui-button:hover {
     cursor: pointer;
 }
 
@@ -131,7 +142,7 @@ html, body {
     width: 50%;
 }
 
-.responsedata{
+.responsedata {
     border-left: 1px solid #1f2b38;
     border-radius: 0px 8px 8px 0px;
     background-color: #4d6278;
@@ -162,7 +173,8 @@ html, body {
     border-radius: 0px 8px 0px 0px;
 }
 
-.request-group {flex-direction: column;
+.request-group {
+    flex-direction: column;
     background: #34495e;
     border-radius: 8px;
     display: flex;
