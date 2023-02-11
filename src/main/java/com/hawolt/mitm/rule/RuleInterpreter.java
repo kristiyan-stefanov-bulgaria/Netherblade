@@ -1,9 +1,6 @@
 package com.hawolt.mitm.rule;
 
-import com.hawolt.http.proxy.ProxyRequest;
-import com.hawolt.http.proxy.ProxyResponse;
 import com.hawolt.io.Core;
-import com.hawolt.logger.Logger;
 import com.hawolt.mitm.CommunicationType;
 import com.hawolt.mitm.InstructionType;
 import com.hawolt.mitm.RewriteModule;
@@ -13,7 +10,6 @@ import io.javalin.http.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
