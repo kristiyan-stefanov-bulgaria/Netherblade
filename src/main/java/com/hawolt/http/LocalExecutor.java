@@ -15,6 +15,7 @@ import io.javalin.http.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class LocalExecutor {
             });
             path("/config", () -> {
                 get("/load", RuleInterpreter.RELOAD);
+                get("/close", context -> Frame.getFrames()[0].dispose());
             });
         });
     }
@@ -60,14 +62,7 @@ public class LocalExecutor {
     private static final Handler LAUNCH = context -> {
         String client = LocaleInstallation.RIOT_CLIENT_SERVICES.toString();
         try {
-            Runtime.getRuntime().exec(
-                    String.join(" ",
-                            client, "--client-config-url=\"http://127.0.0.1:" + StaticConstants.PORT_MAPPING.get("config") + "\"",
-                            "--launch-product=league_of_legends",
-                            "--launch-patchline=live",
-                            "--allow-multiple-clients"
-                    )
-            );
+            Runtime.getRuntime().exec(String.join(" ", client, "--client-config-url=\"http://127.0.0.1:" + StaticConstants.PORT_MAPPING.get("config") + "\"", "--launch-product=league_of_legends", "--launch-patchline=live", "--allow-multiple-clients"));
         } catch (IOException e) {
             Logger.error(e);
         }
@@ -94,6 +89,7 @@ public class LocalExecutor {
                     plain = plain.replaceAll(target, replacement);
                     Logger.debug("Rewriting {} to {} in request {}", target, replacement, response.getOriginal().getUrl());
                 }
+                Logger.debug(plain);
                 response.setBody(plain.getBytes(StandardCharsets.UTF_8));
                 return response;
             }
@@ -102,14 +98,14 @@ public class LocalExecutor {
             public void onException(Exception e) {
                 Logger.error(e);
             }
-        }, "GET");
+        }, SUPPORTED);
 
         for (String key : map.keySet()) {
             BasicProxyServer server = map.get(key);
             server.register(new IRequestModifier() {
                 @Override
-                public ProxyRequest onBeforeRequest(ProxyRequest request) {
-                    return request;
+                public ProxyRequest onBeforeRequest(ProxyRequest o) {
+                    return Unsafe.cast(RuleInterpreter.map.get(CommunicationType.OUTGOING).rewrite(Unsafe.cast(o)));
                 }
 
                 @Override
@@ -160,7 +156,7 @@ public class LocalExecutor {
                     received.put("headers", headers2);
                     received.put("body", response.getByteBody() != null ? new String(response.getByteBody()) : JSONObject.NULL);
                     object.put("received", received);
-
+                    Logger.debug(object.toString());
                     SocketServer.forward(object.toString());
                     return response;
                 }
