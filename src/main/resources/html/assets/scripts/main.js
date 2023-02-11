@@ -23,21 +23,23 @@ window.onload = function () {
         }
     });
     var search = document.getElementById('search');
-    search.addEventListener('keyup', function () {
-        var display = document.getElementById('display');
-        var children = display.childNodes;
-        var query = search.value;
-        for (var i = 0; i < children.length; i++) {
-            var ref = children[i];
-            if (ref.outerHTML == undefined) continue;
-            var source = ref.outerHTML.toLowerCase();
-            if (source.includes(query)) {
-                if (ref.classList.contains("hidden")) ref.classList.remove("hidden")
-            } else {
-                if (!ref.classList.contains("hidden")) ref.classList.add("hidden")
-            }
+    search.addEventListener('keyup', filter);
+}
+
+function filter() {
+    var display = document.getElementById('display');
+    var children = display.childNodes;
+    var query = search.value;
+    for (var i = 0; i < children.length; i++) {
+        var ref = children[i];
+        if (ref.outerHTML === undefined) continue;
+        var source = ref.outerHTML;
+        if (source.includes(query)) {
+            if (ref.classList.contains("hidden")) ref.classList.remove("hidden")
+        } else {
+            if (!ref.classList.contains("hidden")) ref.classList.add("hidden")
         }
-    });
+    }
 }
 
 function flip(e) {
@@ -75,6 +77,7 @@ function connect(host) {
     };
     socket.onmessage = function (msg) {
         append(JSON.parse(msg.data));
+        filter();
     };
     socket.onclose = function (msg) {
         console.log("disconnected from " + host);
