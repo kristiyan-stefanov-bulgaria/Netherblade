@@ -59,4 +59,9 @@ public class ProxyResponse implements IRequest {
     public String url() {
         return original.url();
     }
+
+    @Override
+    public String method() {
+        return original.method();
+    }
 }

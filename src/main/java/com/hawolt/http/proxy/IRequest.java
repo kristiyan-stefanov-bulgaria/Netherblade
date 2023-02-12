@@ -16,4 +16,6 @@ public interface IRequest {
     void setBody(String in);
 
     String url();
+
+    String method();
 }
