@@ -31,7 +31,8 @@ public abstract class RewriteModule<T extends IRequest> {
             List<RewriteRule> rules = map.get(type);
             for (RewriteRule rule : rules) {
                 if (!rule.getTarget().matcher(communication.url()).matches()) continue;
-                Logger.debug("Matching url for rule {} ", communication.url());
+                if (!rule.getMethod().equals(communication.method()) && !rule.getMethod().equals("*")) continue;
+                Logger.debug("Matching url for rule [{}] {} ", communication.method(), communication.url());
                 switch (type) {
                     case URL:
                         communication = rewriteURL(communication, rule);

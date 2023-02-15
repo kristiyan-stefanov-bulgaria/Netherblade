@@ -111,6 +111,11 @@ public class ProxyRequest implements IRequest {
     }
 
     @Override
+    public String method() {
+        return method;
+    }
+
+    @Override
     public Map<String, List<String>> getHeaders() {
         Map<String, List<String>> map = new HashMap<>();
         for (String key : headers.keySet()) {

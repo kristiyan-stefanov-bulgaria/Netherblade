@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class RewriteRule implements IRewrite {
     private final String plain, replacement;
     private final Pattern target;
+    private final String method;
     private final RuleType type;
     private Pattern pattern;
 
@@ -24,6 +25,7 @@ public class RewriteRule implements IRewrite {
         this.type = RuleType.find(object.getString("type"));
         this.replacement = object.getString("replace");
         this.plain = object.getString("find");
+        this.method = object.getString("method");
         if (type != RuleType.REGEX) return;
         this.pattern = Pattern.compile(plain);
     }
@@ -34,6 +36,10 @@ public class RewriteRule implements IRewrite {
 
     public Pattern getTarget() {
         return target;
+    }
+
+    public String getMethod() {
+        return method;
     }
 
     public String getPlain() {
