@@ -81,17 +81,18 @@ public class LocalExecutor {
             }
 
             @Override
-            public ProxyResponse onResponse(ProxyResponse response) {
+            public ProxyResponse onResponse(ProxyResponse o) {
+                ProxyResponse response = Unsafe.cast(RuleInterpreter.map.get(CommunicationType.INGOING).rewrite(Unsafe.cast(o)));
                 String plain = new String(response.getByteBody());
                 for (String type : system.keySet()) {
                     String target = system.getString(type);
                     String replacement = String.format("http://127.0.0.1:%d", StaticConstants.PORT_MAPPING.get(type));
                     plain = plain.replaceAll(target, replacement);
-                    Logger.debug("Rewriting {} to {} in request {}", target, replacement, response.getOriginal().getUrl());
+                    Logger.debug("Rewriting {} to {} in request {}", target, replacement, o.getOriginal().getUrl());
                 }
                 Logger.debug(plain);
-                response.setBody(plain.getBytes(StandardCharsets.UTF_8));
-                return response;
+                o.setBody(plain.getBytes(StandardCharsets.UTF_8));
+                return o;
             }
 
             @Override

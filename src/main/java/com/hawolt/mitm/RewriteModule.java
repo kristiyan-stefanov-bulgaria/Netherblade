@@ -7,7 +7,6 @@ import com.hawolt.mitm.rule.RewriteRule;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Created: 22/11/2022 03:46
