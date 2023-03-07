@@ -1,6 +1,10 @@
-package com.hawolt.mitm.rule;
+package com.hawolt.mitm.rule.impl;
 
 import com.hawolt.logger.Logger;
+import com.hawolt.mitm.rule.AbstractRewriteRule;
+import com.hawolt.mitm.rule.Replacement;
+import com.hawolt.mitm.rule.ReplacementGroup;
+import com.hawolt.mitm.rule.RuleType;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -15,20 +19,15 @@ import java.util.stream.Collectors;
  * Author: Twitter @hawolt
  **/
 
-public class RewriteRule implements IRewrite {
+public class BodyRewriteRule extends AbstractRewriteRule<String, String> {
     private final String plain;
-    private final Pattern target;
-    private final String method;
-    private final RuleType type;
     private List<ReplacementGroup> groups;
     private String replacement;
     private Pattern pattern;
 
-    public RewriteRule(JSONObject object) {
-        this.target = Pattern.compile(object.getString("url"));
-        this.type = RuleType.find(object.getString("type"));
+    public BodyRewriteRule(JSONObject object) {
+        super(object);
         this.plain = object.getString("find");
-        this.method = object.getString("method");
         if (type != RuleType.REGEX) {
             this.replacement = object.getString("replace");
         } else {
@@ -45,10 +44,6 @@ public class RewriteRule implements IRewrite {
 
     public String getReplacement() {
         return replacement == null ? "SEE_GROUPS" : replacement;
-    }
-
-    public Pattern getTarget() {
-        return target;
     }
 
     public String getMethod() {

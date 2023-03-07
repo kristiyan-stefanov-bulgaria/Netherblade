@@ -1,11 +1,9 @@
 package com.hawolt.mitm.impl;
 
 import com.hawolt.http.proxy.ProxyResponse;
-import com.hawolt.mitm.CommunicationType;
 import com.hawolt.mitm.RewriteModule;
-import com.hawolt.mitm.rule.RewriteRule;
-
-import java.util.List;
+import com.hawolt.mitm.rule.AbstractRewriteRule;
+import com.hawolt.mitm.rule.impl.CodeRewriteRule;
 
 /**
  * Created: 22/11/2022 04:01
@@ -14,19 +12,19 @@ import java.util.List;
 
 public class ResponseModule extends RewriteModule<ProxyResponse> {
 
-
     @Override
-    protected ProxyResponse rewriteHeaders(ProxyResponse communication, RewriteRule rule) {
-        return null;
+    protected ProxyResponse rewriteQuery(ProxyResponse communication, AbstractRewriteRule<?, ?> rule) {
+        return communication;
     }
 
     @Override
-    protected ProxyResponse rewriteQuery(ProxyResponse communication, RewriteRule rule) {
-        return null;
+    protected ProxyResponse rewriteURL(ProxyResponse communication, AbstractRewriteRule<?, ?> rule) {
+        return communication;
     }
 
     @Override
-    protected ProxyResponse rewriteURL(ProxyResponse communication, RewriteRule rule) {
-        return null;
+    protected ProxyResponse rewriteCode(ProxyResponse communication, CodeRewriteRule rule) {
+        communication.setCode(rule.rewrite(communication.getCode()));
+        return communication;
     }
 }
