@@ -15,6 +15,7 @@ import io.javalin.http.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,12 +35,16 @@ public class RuleInterpreter {
     };
 
     public static void reload(String file) throws IOException {
-        String filename = file == null ? "instructions.json" : file;
-        JSONObject object = new JSONObject(Core.read(Core.getFileAsStream(Paths.get(filename))).toString());
-        for (String first : object.keySet()) {
-            CommunicationType communicationType = CommunicationType.find(first);
-            if (communicationType == CommunicationType.UNKNOWN) continue;
-            RuleInterpreter.map.get(communicationType).supply(interpret(first, object));
+        try {
+            String filename = file == null ? "instructions.json" : file;
+            JSONObject object = new JSONObject(Core.read(Core.getFileAsStream(Paths.get(filename))).toString());
+            for (String first : object.keySet()) {
+                CommunicationType communicationType = CommunicationType.find(first);
+                if (communicationType == CommunicationType.UNKNOWN) continue;
+                RuleInterpreter.map.get(communicationType).supply(interpret(first, object));
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("instructions.json not present.");
         }
         RuleInjector.load(RunLevel.get("inject.json"));
     }
