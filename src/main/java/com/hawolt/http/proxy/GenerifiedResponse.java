@@ -10,11 +10,12 @@ import java.util.Map;
 
 public class GenerifiedResponse {
     private final Map<String, List<String>> headers;
-    private final byte[] body;
+    private final byte[] body, original;
     private final String url;
     private final int code;
 
-    public GenerifiedResponse(String url, Map<String, List<String>> headers, int code, byte[] body) {
+    public GenerifiedResponse(String url, Map<String, List<String>> headers, int code, byte[] body, byte[] original) {
+        this.original = original;
         this.headers = headers;
         this.body = body;
         this.code = code;
@@ -35,5 +36,9 @@ public class GenerifiedResponse {
 
     public int getCode() {
         return code;
+    }
+
+    public byte[] getOriginal() {
+        return original;
     }
 }

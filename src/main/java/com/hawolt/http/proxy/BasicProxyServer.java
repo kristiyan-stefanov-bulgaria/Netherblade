@@ -28,6 +28,12 @@ public class BasicProxyServer {
         javalin.head("*", this::forward);
         javalin.get("*", this::forward);
         javalin.put("*", this::forward);
+        javalin.before("*", context -> {
+            context.header("access-control-allow-origin", "*");
+            context.header("access-control-expose-headers", "*");
+            context.header("access-control-allow-methods", "*");
+            context.header("access-control-allow-headers", "*");
+        });
     }
 
     private void forward(Context context) {
@@ -63,10 +69,12 @@ public class BasicProxyServer {
         }
         ProxyResponse complete = Objects.requireNonNull(response);
         context.status(complete.getCode());
-        String content = new String(complete.getByteBody());
-        context.header("Content-Length", String.valueOf(content.length()));
+        byte[] content = !context.url().contains("storefront") ? complete.getByteBody() : response.getGenerifiedResponse().getBody();
+        context.header("Content-Length", String.valueOf(content.length));
         String type = context.header("Content-Type");
         if (type != null) context.header("Content-Type", type);
+        String encoding = context.header("Content-Encoding");
+        if (encoding != null) context.header("Content-Encoding", encoding);
         context.result(content);
     }
 

@@ -57,7 +57,7 @@ public class LocalExecutor {
     };
 
 
-    private final static String[] SUPPORTED = new String[]{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"};
+    private final static String[] SUPPORTED = new String[]{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"};
 
     private static final Handler LAUNCH = context -> {
         String client = LocaleInstallation.RIOT_CLIENT_SERVICES.toString();
@@ -76,8 +76,8 @@ public class LocalExecutor {
         }
         map.get("config").register(new IRequestModifier() {
             @Override
-            public ProxyRequest onBeforeRequest(ProxyRequest request) {
-                return request;
+            public ProxyRequest onBeforeRequest(ProxyRequest o) {
+                return Unsafe.cast(RuleInterpreter.map.get(CommunicationType.OUTGOING).rewrite(Unsafe.cast(o)));
             }
 
             @Override
@@ -88,9 +88,9 @@ public class LocalExecutor {
                     String target = system.getString(type);
                     String replacement = String.format("http://127.0.0.1:%d", StaticConstants.PORT_MAPPING.get(type));
                     plain = plain.replaceAll(target, replacement);
-                    Logger.debug("Rewriting {} to {} in request {}", target, replacement, o.getOriginal().getUrl());
+                    //Logger.debug("Rewriting {} to {} in request {}", target, replacement, o.getOriginal().getUrl());
                 }
-                Logger.debug(plain);
+                //Logger.debug(plain);
                 o.setBody(plain.getBytes(StandardCharsets.UTF_8));
                 return o;
             }
@@ -157,7 +157,7 @@ public class LocalExecutor {
                     received.put("headers", headers2);
                     received.put("body", response.getByteBody() != null ? new String(response.getByteBody()) : JSONObject.NULL);
                     object.put("received", received);
-                    Logger.debug(object.toString());
+                    //Logger.debug(object.toString());
                     SocketServer.forward(object.toString());
                     return response;
                 }

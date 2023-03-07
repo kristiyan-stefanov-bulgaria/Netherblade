@@ -1,5 +1,6 @@
 package com.hawolt.http.proxy;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 public class ProxyResponse implements IRequest {
     private final Map<String, List<String>> headers;
+    private final GenerifiedResponse response;
     private final ProxyRequest original;
     private byte[] body;
     private int code;
@@ -18,7 +20,22 @@ public class ProxyResponse implements IRequest {
         this.headers = response.getHeaders();
         this.code = response.getCode();
         this.body = response.getBody();
+        this.response = response;
         this.original = request;
+    }
+
+    public GenerifiedResponse getGenerifiedResponse() {
+        return response;
+    }
+
+    @Override
+    public void removeHeader(String header) {
+        headers.remove(header);
+    }
+
+    @Override
+    public void addHeader(String k, String v) {
+        headers.put(k, Collections.singletonList(v));
     }
 
     public ProxyRequest getOriginal() {
@@ -64,4 +81,5 @@ public class ProxyResponse implements IRequest {
     public String method() {
         return original.method();
     }
+
 }

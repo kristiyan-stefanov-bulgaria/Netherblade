@@ -13,6 +13,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -23,8 +24,8 @@ import java.util.*;
 
 public class ProxyRequest implements IRequest {
 
-    private final Map<String, String> headers = new HashMap<>();
     private final String method, url;
+    private Map<String, String> headers = new HashMap<>();
     private String body;
 
 
@@ -44,8 +45,6 @@ public class ProxyRequest implements IRequest {
             try (CloseableHttpClient client = HttpClients.createDefault()) {
                 try (CloseableHttpResponse response = client.execute(get)) {
                     byte[] body = Core.read(response.getEntity().getContent()).toByteArray();
-                    System.err.println(body.length);
-                    System.err.println(new String(body));
                     int code = response.getCode();
                     Header[] headers = response.getHeaders();
                     Map<String, List<String>> map = new HashMap<>();
@@ -53,7 +52,7 @@ public class ProxyRequest implements IRequest {
                         if (!map.containsKey(header.getName())) map.put(header.getValue(), new ArrayList<>());
                         map.get(header.getName()).add(header.getValue());
                     }
-                    return new GenerifiedResponse(url, map, code, body);
+                    return new GenerifiedResponse(url, map, code, body, body);
                 }
             }
         } else {
@@ -75,14 +74,13 @@ public class ProxyRequest implements IRequest {
             }
             try (Response response = client.newCall(request.build()).execute()) {
                 String encoding = response.headers().get("content-encoding");
-                byte[] body = null;
+                byte[] body = null, original = null;
                 try (ResponseBody internal = response.body()) {
                     if (internal != null) {
+                        body = (original = internal.source().readByteArray());
                         if ("gzip".equals(encoding)) {
-                            GzipSource gzipSource = new GzipSource(internal.source());
+                            GzipSource gzipSource = new GzipSource(Okio.source(new ByteArrayInputStream(original)));
                             body = Okio.buffer(gzipSource).readByteArray();
-                        } else {
-                            body = internal.bytes();
                         }
                     }
                 }
@@ -92,13 +90,19 @@ public class ProxyRequest implements IRequest {
                     if (!map.containsKey(header.getFirst())) map.put(header.getFirst(), new ArrayList<>());
                     map.get(header.getFirst()).add(header.getSecond());
                 }
-                return new GenerifiedResponse(url, map, code, body);
+                return new GenerifiedResponse(url, map, code, body, original);
             }
         }
     }
 
+    @Override
     public void addHeader(String key, String value) {
         headers.put(key, value);
+    }
+
+    @Override
+    public void removeHeader(String key) {
+        headers.remove(key);
     }
 
     public void setBody(String body) {

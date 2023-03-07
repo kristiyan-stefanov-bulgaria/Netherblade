@@ -18,4 +18,8 @@ public interface IRequest {
     String url();
 
     String method();
+
+    void addHeader(String k, String v);
+
+    void removeHeader(String header);
 }
