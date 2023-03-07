@@ -6,7 +6,7 @@ Netherblade allows you to look behind the curtain and see requests executed by t
 
 currently Netherblade is able to intercept almost all traffic issued by the League Client
 
-![preview](https://i.imgur.com/6kzR3yJ.gif)
+![preview](https://i.imgur.com/zwgfWvb.png)
 
 ### software requirements
 
