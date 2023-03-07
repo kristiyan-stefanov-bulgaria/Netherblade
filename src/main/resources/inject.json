@@ -1,0 +1,60 @@
+{
+  "ingoing": {
+    "body": [
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"lol.client_settings.store.use_ledge\":(.*?),",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "true"
+          }
+        ]
+      },
+      {
+        "method": "OPTIONS",
+        "url": "(.*)",
+        "find": "(.*)",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": ""
+          }
+        ]
+      }
+    ],
+    "code": [
+      {
+        "method": "OPTIONS",
+        "type": "modify",
+        "url": "(.*)",
+        "code": 200
+      }
+    ]
+  },
+  "outgoing": {
+    "header": [
+      {
+        "method": "GET",
+        "url": "(.*)sgp.pvp.net/storefront/v1/uiConfiguration",
+        "type": "add",
+        "key": "Authorization",
+        "value": "Bearer $(substring $(var token) 1 $(mint $(strlen $(var token)) - 1)) $(declare token $(lcu GET $(var port) /lol-league-session/v1/league-session-token))"
+      },
+      {
+        "method": "GET",
+        "url": "(.*)sgp.pvp.net/storefront/v3/(.*)",
+        "type": "add",
+        "key": "Authorization",
+        "value": "Bearer $(jsonobject token $(lcu GET $(var port) /lol-rso-auth/v1/authorization/access-token))"
+      }
+    ]
+  }
+}
