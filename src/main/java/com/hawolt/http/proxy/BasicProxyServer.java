@@ -69,13 +69,19 @@ public class BasicProxyServer {
         }
         ProxyResponse complete = Objects.requireNonNull(response);
         context.status(complete.getCode());
-        byte[] content = !context.url().contains("storefront") ? complete.getByteBody() : response.getGenerifiedResponse().getBody();
-        context.header("Content-Length", String.valueOf(content.length));
         String type = context.header("Content-Type");
         if (type != null) context.header("Content-Type", type);
-        String encoding = context.header("Content-Encoding");
-        if (encoding != null) context.header("Content-Encoding", encoding);
-        context.result(content);
+        if (context.url().contains("storefront")) {
+            String encoding = context.header("Content-Encoding");
+            if (encoding != null) context.header("Content-Encoding", encoding);
+            byte[] content = complete.getGenerifiedResponse().getBody();
+            context.header("Content-Length", String.valueOf(content.length));
+            context.result(content);
+        } else {
+            String content = new String(complete.getByteBody());
+            context.header("Content-Length", String.valueOf(content.length()));
+            context.result(content);
+        }
     }
 
     public void register(IRequestModifier modifier, String... methods) {
