@@ -77,7 +77,7 @@ public class ProxyRequest implements IRequest {
                 byte[] body = null, original = null;
                 try (ResponseBody internal = response.body()) {
                     if (internal != null) {
-                        body = (original = internal.source().readByteArray());
+                        body = (original = internal.bytes());
                         if ("gzip".equals(encoding)) {
                             GzipSource gzipSource = new GzipSource(Okio.source(new ByteArrayInputStream(original)));
                             body = Okio.buffer(gzipSource).readByteArray();
