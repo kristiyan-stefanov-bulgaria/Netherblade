@@ -6,7 +6,7 @@ package com.hawolt.mitm.rule;
  **/
 
 public enum RuleType {
-    PLAIN, REGEX, UNKNOWN;
+    PLAIN, REGEX, ADD, REMOVE, MODIFY, CORS, UNKNOWN;
 
     private static final RuleType[] RULE_TYPES = RuleType.values();
 
