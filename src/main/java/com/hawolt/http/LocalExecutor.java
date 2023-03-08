@@ -149,6 +149,7 @@ public class LocalExecutor {
                         List<String> list = entry.getValue();
                         for (String value : list) {
                             JSONObject header = new JSONObject();
+                            if (entry.getKey().startsWith("access-control")) continue;
                             header.put("k", entry.getKey());
                             header.put("v", value);
                             headers2.put(header);
