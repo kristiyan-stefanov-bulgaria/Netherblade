@@ -16,6 +16,62 @@
         ]
       },
       {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"chat.allow_bad_cert.enabled\":(.*?),",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "true"
+          }
+        ]
+      },
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"chat.use_tls.enabled\":(.*?),",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "false"
+          }
+        ]
+      },
+      {
+        "method": "GET",
+        "url": "https://clientconfig.rpg.riotgames.com/api/v1/config/player(.*)namespace=chat(.*)",
+        "find": "\"([a-z0-9-]{2,6})\":\"(([a-z0-9]{2,4})\\.chat\\.si\\.riotgames\\.com)",
+        "type": "regex_cache",
+        "key": 1,
+        "value": 2
+      },
+      {
+        "method": "GET",
+        "url": "https://riot-geo.pas.si.riotgames.com/pas/v1/service/chat",
+        "type": "plaintext_cache",
+        "name": "xmpptoken"
+      },
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"[a-z0-9-]{2,6}\":\"(([a-z0-9]{2,4})\\.chat\\.si\\.riotgames\\.com)",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "127.0.0.1"
+          }
+        ]
+      },
+      {
         "method": "OPTIONS",
         "url": "(.*)",
         "find": "(.*)",
@@ -41,20 +97,6 @@
   },
   "outgoing": {
     "header": [
-      {
-        "method": "GET",
-        "url": "(.*)sgp.pvp.net/storefront/v1/uiConfiguration",
-        "type": "add",
-        "key": "Authorization",
-        "value": "Bearer $(substring $(var token) 1 $(mint $(strlen $(var token)) - 1)) $(declare token $(lcu GET $(var port) /lol-league-session/v1/league-session-token))"
-      },
-      {
-        "method": "GET",
-        "url": "(.*)sgp.pvp.net/storefront/v3/(.*)",
-        "type": "add",
-        "key": "Authorization",
-        "value": "Bearer $(jsonobject token $(lcu GET $(var port) /lol-rso-auth/v1/authorization/access-token))"
-      }
     ]
   }
 }
