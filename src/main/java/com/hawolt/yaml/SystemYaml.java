@@ -47,6 +47,7 @@ public class SystemYaml {
             region.put("queue", yamlServers.getQueue());
             region.put("ledge", yamlServers.getLedge());
             region.put("platform", yamlServers.getPlatform());
+            region.put("geo", "https://riot-geo.pas.si.riotgames.com");
             object.put(yamlRegion.getName(), region);
         }
         return object;

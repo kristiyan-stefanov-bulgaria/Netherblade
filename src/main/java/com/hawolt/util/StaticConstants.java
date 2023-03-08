@@ -17,6 +17,7 @@ public class StaticConstants {
         put("email", 35201);
         put("queue", 35203);
         put("ledge", 35204);
+        put("geo", 35206);
     }};
 
     public static final String RIOT_GAMES = "Riot Games";
