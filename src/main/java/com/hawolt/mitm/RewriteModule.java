@@ -10,7 +10,6 @@ import com.hawolt.mitm.rule.impl.CodeRewriteRule;
 import com.hawolt.mitm.rule.impl.HeaderRewriteRule;
 import com.hawolt.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ public abstract class RewriteModule<T extends IRequest> {
     protected Map<InstructionType, List<IRewrite<?, ?>>> map = new HashMap<>();
 
     public void supply(Map<InstructionType, List<IRewrite<?, ?>>> map) {
+        this.map.clear();
         for (InstructionType type : map.keySet()) {
             for (IRewrite<?, ?> rule : map.get(type)) {
                 Logger.debug("RewriteModule [{}]: {} {}", type.name(), rule.getMethod(), rule.getTarget());
@@ -45,7 +45,7 @@ public abstract class RewriteModule<T extends IRequest> {
             for (IRewrite<?, ?> rule : rules) {
                 if (!rule.getTarget().matcher(communication.url()).matches()) continue;
                 if (!rule.getMethod().equals(communication.method()) && !rule.getMethod().equals("*")) continue;
-                Logger.debug("Matching url for rule [{}] {} ", communication.method(), communication.url());
+                Logger.debug("Matching url for {} rule [{}] {} ", type.name(), communication.method(), communication.url());
                 switch (type) {
                     case CODE:
                         communication = rewriteCode(communication, Unsafe.cast(rule));
@@ -76,31 +76,10 @@ public abstract class RewriteModule<T extends IRequest> {
     }
 
     private T rewriteHeaders(T communication, HeaderRewriteRule rule) {
-        if (rule.getType() == RuleType.CORS) {
-            for (String key : new ArrayList<>(communication.getHeaders().keySet())) {
-                if (key.startsWith("access-control")) {
-                    String value = communication.getHeaders().get(key).get(0);
-                    communication.addHeader(fix(key), value);
-                    communication.removeHeader(key);
-                }
-            }
-        } else {
-            Pair<String, String> result = rule.rewrite(communication.getHeaders());
-            if (result == null && rule.getType() == RuleType.REMOVE) communication.removeHeader(rule.getKey());
-            else if (result != null) communication.addHeader(result.getKey(), result.getValue());
-        }
+        Pair<String, String> result = rule.rewrite(communication.getHeaders());
+        if (result == null && rule.getType() == RuleType.REMOVE) communication.removeHeader(rule.getKey());
+        else if (result != null) communication.addHeader(result.getKey(), result.getValue());
         return communication;
-    }
-
-    private String fix(String key) {
-        StringBuilder builder = new StringBuilder(key);
-        builder.setCharAt(0, Character.toUpperCase(builder.charAt(0)));
-        for (int i = 1; i < key.length(); i++) {
-            if (builder.charAt(i) == '-') {
-                builder.setCharAt(i + 1, Character.toUpperCase(builder.charAt(i + 1)));
-            }
-        }
-        return builder.toString();
     }
 
     protected abstract T rewriteQuery(T communication, AbstractRewriteRule<?, ?> rule);
