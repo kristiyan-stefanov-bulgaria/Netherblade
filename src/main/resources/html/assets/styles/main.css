@@ -15,10 +15,15 @@ body {
 }
 
 .display {
-   display: flex;
    overflow-y: auto;
+   background-color: red;
    width: 50%;
-   height: auto;
+   height: 85%;
+   margin: 5px;
+   gap: 5px;
+   margin-top: 0 !important;
+   flex-direction: column;
+   border-radius: 8px;
 }
 
 #flexing {
@@ -37,13 +42,14 @@ body {
 
 .navbar {
    height: 4rem !important;
-   background-color: #ffffff !important;
+   background-color: #e0e0e0 !important;
    transition: all 0.5s ease-in-out;
    border-radius: 0rem;
 }
 
 .navbar:hover {
    background-color: #e0e0e0 !important;
+   background-color: #ffffff !important;
    border-radius: 1rem;
 }
 
@@ -100,16 +106,6 @@ body {
 
 .ui-button:hover {
    cursor: pointer;
-}
-
-.display {
-   flex-direction: column;
-   border-radius: 8px;
-   display: flex;
-   margin: 5px;
-   gap: 5px;
-   margin-top: 41px;
-   padding-bottom: 5px;
 }
 
 .hint {
