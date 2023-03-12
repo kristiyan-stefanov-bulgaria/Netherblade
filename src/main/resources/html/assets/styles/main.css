@@ -40,6 +40,18 @@ body {
    width: 1rem;
 }
 
+.region {
+   width: fit-content;
+   height: fit-content;
+   background-color: #e0e0e0 !important;
+   border-color: #e0e0e0 !important;
+}
+
+.region:hover {
+   background-color: #ffffff !important;
+   border-color: black !important;
+}
+
 .navbar {
    height: 4rem !important;
    background-color: #e0e0e0 !important;
@@ -48,15 +60,14 @@ body {
 }
 
 .navbar:hover {
-   background-color: #e0e0e0 !important;
    background-color: #ffffff !important;
    border-radius: 1rem;
 }
 
 .searchinghelp {
-   width: 5rem !important;
+   width: 77rem !important;
    color: #ffffff !important;
-   background-color: #ffffff !important;
+   background-color: #e0e0e0 !important;
    transition: all 0.5s ease-in-out !important;
    border: none !important;
    border-radius: 0rem !important;
@@ -64,9 +75,9 @@ body {
 }
 
 .searchinghelp:hover {
-   width: 20rem !important;
+   width: 77rem !important;
+   background-color: #ffffff !important;
    color: #000000 !important;
-   background-color: #e0e0e0 !important;
    border: 1px solid #1111118e !important;
    border-radius: 0.5rem !important;
 }
