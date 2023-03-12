@@ -54,6 +54,20 @@ body {
 
 .meow {
    width: 100%;
+   flex-direction: row !important;
+}
+
+.show {
+   height: fit-content;
+   padding: 5px;
+   background-color: #ffffff !important;
+   column-gap: 1rem !important;
+   flex-direction: column;
+   display: flex;
+   transition: background-color 0.5s ease-in-out;
+   gap: 0.5rem !important;
+   margin-top: 0.73rem;
+   border-radius: 0px 0px 8px 8px;
 }
 
 .navbar {
