@@ -52,11 +52,16 @@ body {
    border-color: black !important;
 }
 
+.meow {
+   width: 100%;
+}
+
 .navbar {
    height: 4rem !important;
    background-color: #e0e0e0 !important;
    transition: all 0.5s ease-in-out;
    border-radius: 0rem;
+   width: 100%;
 }
 
 .navbar:hover {
@@ -65,7 +70,7 @@ body {
 }
 
 .searchinghelp {
-   width: 77rem !important;
+   width: 100% !important;
    color: #ffffff !important;
    background-color: #e0e0e0 !important;
    transition: all 0.5s ease-in-out !important;
@@ -75,7 +80,6 @@ body {
 }
 
 .searchinghelp:hover {
-   width: 77rem !important;
    background-color: #ffffff !important;
    color: #000000 !important;
    border: 1px solid #1111118e !important;
