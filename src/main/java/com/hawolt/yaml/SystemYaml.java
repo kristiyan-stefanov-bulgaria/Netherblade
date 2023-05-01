@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created: 30/07/2022 17:52
@@ -20,6 +20,13 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public class SystemYaml {
+    public static final Map<Integer, String> map = new HashMap<>();
+    private static final List<String> legacy = new ArrayList<String>() {{
+        add("eun1");
+        add("tr");
+        add("ru");
+    }};
+
 
     public static JSONObject config;
 
@@ -32,6 +39,10 @@ public class SystemYaml {
             System.exit(1);
         }
     }
+
+    public String default_region, player_bug_report_url;
+    public Map app, build, patcher, player_support_url, region_data, riotclient;
+    public ArrayList<LinkedHashMap> products;
 
     public static JSONObject generate() throws IOException {
         YamlReader reader = new YamlReader(new String(Files.readAllBytes(LocaleInstallation.SYSTEM_YAML.toPath())));
@@ -53,8 +64,45 @@ public class SystemYaml {
         return object;
     }
 
-    public String default_region, player_bug_report_url;
-    public Map app, build, patcher, player_support_url, region_data, riotclient;
-    public ArrayList<LinkedHashMap> products;
-
+    public static void rewrite() throws IOException {
+        Path path = LocaleInstallation.SYSTEM_YAML.toPath();
+        Logger.debug("system.yaml: {}", path);
+        Path original = path.getParent().resolve("system.yaml.backup");
+        List<String> lines;
+        if (original.toFile().exists()) {
+            lines = Files.readAllLines(original);
+        } else {
+            Files.write(original, Files.readAllBytes(path));
+            lines = Files.readAllLines(path);
+        }
+        int number = 21110;
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (!line.trim().equals("lcds:")) continue;
+            StringBuilder host = new StringBuilder(lines.get(i + 1));
+            int indexOfHost = host.indexOf(":") + 2;
+            String relay = host.substring(indexOfHost, host.length());
+            int firstIndex = relay.indexOf(".");
+            int secondIndex = relay.indexOf(".", firstIndex + 1);
+            String region = relay.substring(firstIndex + 1, secondIndex);
+            if (!legacy.contains(region)) relay = String.format("feapp.%s.lol.pvp.net", region);
+            else relay = String.format("prod.%s.lol.riotgames.com", region);
+            host.replace(indexOfHost, host.length(), "127.0.0.1");
+            lines.set(i + 1, host.toString());
+            StringBuilder port = new StringBuilder(lines.get(i + 2));
+            int indexOfPort = port.indexOf(":") + 2;
+            int mapping = ++number;
+            port.replace(indexOfPort, port.length(), String.valueOf(mapping));
+            lines.set(i + 2, port.toString());
+            StringBuilder tls = new StringBuilder(lines.get(i + 4));
+            int indexOfTLS = tls.indexOf(":") + 2;
+            tls.replace(indexOfTLS, tls.length(), "false");
+            lines.set(i + 4, tls.toString());
+            Logger.debug("mapping {} to port {}", relay, mapping);
+            map.put(mapping, relay);
+            i += 4;
+        }
+        byte[] bytes = lines.stream().collect(Collectors.joining(System.lineSeparator())).getBytes();
+        Files.write(path, bytes);
+    }
 }
