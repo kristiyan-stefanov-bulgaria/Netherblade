@@ -12,9 +12,9 @@ import java.net.Socket;
  * Author: Twitter @hawolt
  **/
 
-public class ApplicationToProxyConnection extends SocketConnection {
+public class ServerToProxyConnection extends SocketConnection {
 
-    public ApplicationToProxyConnection(SocketCallback callback, Socket in, Socket out) {
+    public ServerToProxyConnection(SocketCallback callback, Socket in, Socket out) {
         super(callback, in, out);
     }
 
@@ -28,12 +28,13 @@ public class ApplicationToProxyConnection extends SocketConnection {
             while (in.isConnected() && out.isConnected() && (code = input.read()) != -1) {
                 byte[] original = read(input, code, input.available());
                 try {
-                    if (interceptor != null) interceptor.sniffOriginalClient(original);
-                    byte[] modified = spoofer.onApplicationData(original);
+                    if (interceptor != null) interceptor.sniffOriginalServer(original);
+                    byte[] modified = spoofer.onServerData(original);
                     if (modified == null) continue;
-                    if (interceptor != null) interceptor.sniffSpoofedClient(modified);
+                    if (interceptor != null) interceptor.sniffSpoofedServer(modified);
                     stream.write(modified);
                 } catch (Exception e) {
+                    //Logger.error(e);
                     stream.write(original);
                 }
             }

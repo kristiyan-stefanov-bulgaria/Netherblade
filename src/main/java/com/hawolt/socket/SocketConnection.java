@@ -1,5 +1,7 @@
 package com.hawolt.socket;
 
+import com.hawolt.logger.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -10,10 +12,10 @@ import java.net.Socket;
  **/
 
 public abstract class SocketConnection implements Runnable {
-    protected final SocketMessageCallback callback;
+    protected final SocketCallback callback;
     protected final Socket in, out;
 
-    public SocketConnection(SocketMessageCallback callback, Socket in, Socket out) {
+    public SocketConnection(SocketCallback callback, Socket in, Socket out) {
         this.callback = callback;
         this.out = out;
         this.in = in;
