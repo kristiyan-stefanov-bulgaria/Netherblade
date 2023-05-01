@@ -32,6 +32,34 @@
       {
         "method": "*",
         "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"rms.allow_bad_cert.enabled\":(.*?),",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "true"
+          }
+        ]
+      },
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"rms.port\":(.*?),",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "11443"
+          }
+        ]
+      },
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
         "find": "\"chat.use_tls.enabled\":(.*?),",
         "type": "regex",
         "groups": [
@@ -45,17 +73,47 @@
       },
       {
         "method": "GET",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"([a-z]{2,4})\":\"(wss://([a-z]{2,4})\\.edge\\.rms\\.si\\.riotgames\\.com)",
+        "type": "regex_cache",
+        "prefix": "rms",
+        "key": 1,
+        "value": 2
+      },
+      {
+        "method": "GET",
         "url": "https://clientconfig.rpg.riotgames.com/api/v1/config/player(.*)namespace=chat(.*)",
         "find": "\"([a-z0-9-]{2,6})\":\"(([a-z0-9]{2,4})\\.chat\\.si\\.riotgames\\.com)",
         "type": "regex_cache",
+        "prefix": "xmpp",
         "key": 1,
         "value": 2
+      },
+      {
+        "method": "GET",
+        "url": "https://riot-geo.pas.si.riotgames.com/pas/v1/service/rms",
+        "type": "plaintext_cache",
+        "name": "rmstoken"
       },
       {
         "method": "GET",
         "url": "https://riot-geo.pas.si.riotgames.com/pas/v1/service/chat",
         "type": "plaintext_cache",
         "name": "xmpptoken"
+      },
+      {
+        "method": "*",
+        "url": "https://clientconfig.rpg.riotgames.com(.*)",
+        "find": "\"[a-z]{2,4}\":\"(wss://([a-z]{2,4})\\.edge\\.rms\\.si\\.riotgames\\.com)",
+        "type": "regex",
+        "groups": [
+          {
+            "id": [
+              1
+            ],
+            "replace": "ws://127.0.0.1"
+          }
+        ]
       },
       {
         "method": "*",

@@ -95,7 +95,18 @@ function connect(host) {
         console.log("Connected to " + host);
     };
     socket.onmessage = function (msg) {
-        append(JSON.parse(msg.data));
+        const json = JSON.parse(msg.data);
+        if (json['protocol'] === 'http') {
+            appendHTML(json);
+        } else if (json['protocol'] === 'rtmp') {
+            appendRTMP(json);
+        } else if (json['protocol'] === 'xmpp') {
+            appendXMPP(json);
+        } else if (json['protocol'] === 'rms') {
+            appendRMS(json);
+        } else {
+            console.log("unknown protocol: " + json['protocol']);
+        }
         filter();
     };
     socket.onclose = function (msg) {
@@ -103,7 +114,119 @@ function connect(host) {
     };
 }
 
-function append(json) {
+function appendXMPP(json) {
+    appendSpecial('XMPP', json);
+}
+
+function appendRTMP(json) {
+    appendSpecial('RTMP', json);
+}
+
+function appendRMS(json) {
+    appendSpecial('RMS', json);
+}
+
+function appendSpecial(name, json) {
+    const request = document.createElement("div");
+    request.className = "request";
+    let ingoing = json.hasOwnProperty("in");
+    let value = json[ingoing ? 'in' : 'out'];
+    request.appendChild(hintSpecial(name, ingoing, value));
+    const display = document.getElementById('display');
+    display.insertBefore(request, display.firstChild);
+}
+
+function hintSpecial(name, ingoing, value) {
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    const main = document.createElement("div");
+    main.className = "main-hint";
+    const method = document.createElement("div");
+    method.className = "method";
+    method.innerHTML = name;
+    main.appendChild(method);
+    const uri = document.createElement("div");
+    uri.className = "uri";
+    switch (name) {
+        case "RMS":
+            let resource = value['payload'].hasOwnProperty("resource");
+            uri.innerHTML = resource ? value['subject'] + " " + value['payload']['resource'] : value['subject'];
+            break;
+        case "XMPP":
+            let regex = /id=\"(.*?)\"/g;
+            let match = regex.exec(value);
+            if (match) {
+                uri.innerHTML = match[1];
+            } else {
+                regex = /^<\/?(.*?)[. >]/g;
+                match = regex.exec(value);
+                if (match) {
+                    uri.innerHTML = match[1];
+                } else {
+                    uri.innerHTML = "heartbeat";
+                }
+            }
+            break;
+        case "RTMP":
+            switch (value['result']) {
+                case "receive":
+                    let response = value['data']['flex.messaging.messages.AsyncMessage']['body']['com.riotgames.platform.serviceproxy.dispatch.LcdsServiceProxyResponse']
+                    uri.innerHTML = "receive: " + response['serviceName'] + " " + response['methodName'] + " " + response['messageId'];
+                    break;
+                case "_result":
+                    uri.innerHTML = "result id: " + value['invokeId'];
+                    break;
+                default:
+                    let data = value['data'];
+                    uri.innerHTML = "invoke id: " + value['invokeId'] + " " + data['destination'] + " " + data['operation'];
+                    break;
+
+            }
+            break;
+    }
+    main.appendChild(uri);
+    const code = document.createElement("div");
+    code.className = "code";
+    code.innerHTML = ingoing ? 'IN' : 'OUT';
+    main.appendChild(code);
+    main.appendChild(expand())
+    hint.appendChild(main);
+    hint.appendChild(specialBonus(value))
+    return hint;
+}
+
+function specialBonus(value) {
+    const bonus = document.createElement("div");
+    bonus.className = "bonus-hint hidden";
+    bonus.appendChild(content(value));
+    return bonus;
+}
+
+function content(value) {
+    const center = document.createElement("div");
+    center.className = "data";
+    const body = document.createElement("div");
+    body.className = "request-group";
+    body.appendChild(header("Content", "cp-body"));
+    const text = document.createElement("pre");
+    text.className = "request-value";
+    switch (encoding(value)) {
+        case "json":
+            text.textContent = JSON.stringify(value, null, 2);
+            break;
+        case "xml":
+            text.textContent = formatXml(value);
+            break
+        default:
+            text.textContent = value;
+            break
+    }
+    body.appendChild(text);
+    center.appendChild(body);
+    return center;
+}
+
+function appendHTML(json) {
     const request = document.createElement("div");
     request.className = "request";
     request.appendChild(hint(json['request'], json['received']));
@@ -182,9 +305,20 @@ function left(request) {
     const body = document.createElement("div");
     body.className = "request-group";
     body.appendChild(header("BODY", "cp-body"));
-    const text = document.createElement("div");
+    const text = document.createElement("pre");
     text.className = "request-value";
-    text.innerHTML = request['body'];
+    let value = request['body'];
+    switch (encoding(value)) {
+        case "json":
+            text.textContent = JSON.stringify(JSON.parse(value), null, 2);
+            break;
+        case "xml":
+            text.textContent = formatXml(value);
+            break
+        default:
+            text.textContent = value;
+            break
+    }
     body.appendChild(text);
     left.appendChild(body);
     return left;
@@ -210,9 +344,20 @@ function right(response) {
     const body = document.createElement("div");
     body.className = "request-group";
     body.appendChild(header("BODY", "cp-body"));
-    const text = document.createElement("div");
+    const text = document.createElement("pre");
     text.className = "request-value";
-    text.innerHTML = response['body'];
+    let value = response['body'];
+    switch (encoding(value)) {
+        case "json":
+            text.textContent = JSON.stringify(JSON.parse(value), null, 2);
+            break;
+        case "xml":
+            text.textContent = formatXml(value);
+            break
+        default:
+            text.textContent = value;
+            break
+    }
     body.appendChild(text);
     right.appendChild(body);
     return right;
@@ -228,4 +373,44 @@ function expand() {
     up.classList = "fa-solid fa-chevron-up hidden";
     expand.appendChild(up);
     return expand;
+}
+
+function encoding(o) {
+    if (o.length === 0) return "plain";
+    else if (JSON.stringify(o).charAt(0) === '{') return "json";
+    else if (o.charAt(0) === '{') return "json";
+    else if (o.charAt(0) === '<') return "xml";
+    else return "plain";
+}
+
+function formatXml(xml) {
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    xml = xml.toString().replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    var nodes = xml.split('\r\n');
+    for (var n in nodes) {
+        var node = nodes[n];
+        var indent = 0;
+        if (node.match(/.+<\/\w[^>]*>$/)) {
+            indent = 0;
+        } else if (node.match(/^<\/\w/)) {
+            if (pad !== 0) {
+                pad -= 1;
+            }
+        } else if (node.match(/^<\w[^>]*[^\/]>.*$/)) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '  ';
+        }
+
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    }
+    return formatted;
 }
