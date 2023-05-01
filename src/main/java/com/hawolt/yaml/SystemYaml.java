@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class SystemYaml {
     public static final Map<Integer, String> map = new HashMap<>();
     private static final List<String> legacy = new ArrayList<String>() {{
-        add("eun1");
+//        add("eun1");
         add("tr");
         add("ru");
     }};
