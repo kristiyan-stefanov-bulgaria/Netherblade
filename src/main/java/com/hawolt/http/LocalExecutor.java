@@ -1,13 +1,15 @@
 package com.hawolt.http;
 
+import com.hawolt.Main;
 import com.hawolt.http.proxy.BasicProxyServer;
 import com.hawolt.http.proxy.ProxyRequest;
 import com.hawolt.http.proxy.ProxyResponse;
 import com.hawolt.logger.Logger;
 import com.hawolt.mitm.CommunicationType;
+import com.hawolt.mitm.InstructionType;
 import com.hawolt.mitm.Unsafe;
 import com.hawolt.mitm.rule.RuleInterpreter;
-import com.hawolt.socket.SocketServer;
+import com.hawolt.ui.SocketServer;
 import com.hawolt.util.LocaleInstallation;
 import com.hawolt.util.StaticConstants;
 import com.hawolt.yaml.SystemYaml;
@@ -15,12 +17,18 @@ import io.javalin.http.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.xml.bind.DatatypeConverter;
 import java.awt.*;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -33,19 +41,6 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class LocalExecutor {
 
-    public static void configure() {
-        path("/v1", () -> {
-            path("/client", () -> {
-                get("/available", LocalExecutor.AVAILABLE);
-                get("/launch/{region}", LocalExecutor.LAUNCH);
-            });
-            path("/config", () -> {
-                get("/load", RuleInterpreter.RELOAD);
-                get("/close", context -> Frame.getFrames()[0].dispose());
-            });
-        });
-    }
-
     private static final Handler AVAILABLE = context -> {
         JSONObject object = new JSONObject();
         JSONArray array = new JSONArray();
@@ -55,7 +50,6 @@ public class LocalExecutor {
         object.put("regions", array);
         context.result(object.toString());
     };
-
 
     private final static String[] SUPPORTED = new String[]{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"};
 
@@ -74,6 +68,7 @@ public class LocalExecutor {
             map.put(type, new BasicProxyServer(StaticConstants.PORT_MAPPING.get(type), system.getString(type)));
             Logger.debug("Proxy {}:{} on {}:{}", type.toUpperCase(), system.getString(type), "http://127.0.0.1", StaticConstants.PORT_MAPPING.get(type));
         }
+
         map.get("config").register(new IRequestModifier() {
             @Override
             public ProxyRequest onBeforeRequest(ProxyRequest o) {
@@ -88,7 +83,7 @@ public class LocalExecutor {
                     String target = system.getString(type);
                     String replacement = String.format("http://127.0.0.1:%d", StaticConstants.PORT_MAPPING.get(type));
                     plain = plain.replaceAll(target, replacement);
-                    //Logger.debug("Rewriting {} to {} in request {}", target, replacement, o.getOriginal().getUrl());
+                    Logger.debug("Rewriting {} to {} in request {}", target, replacement, o.getOriginal().getUrl());
                 }
                 //Logger.debug(plain);
                 o.setBody(plain.getBytes(StandardCharsets.UTF_8));
@@ -100,6 +95,7 @@ public class LocalExecutor {
                 Logger.error(e);
             }
         }, SUPPORTED);
+
 
         for (String key : map.keySet()) {
             BasicProxyServer server = map.get(key);
@@ -158,7 +154,8 @@ public class LocalExecutor {
                     received.put("headers", headers2);
                     received.put("body", response.getByteBody() != null ? new String(response.getByteBody()) : JSONObject.NULL);
                     object.put("received", received);
-                    //Logger.debug(object.toString());
+
+                    object.put("protocol", "http");
                     SocketServer.forward(object.toString());
                     return response;
                 }
@@ -170,4 +167,17 @@ public class LocalExecutor {
             }, SUPPORTED);
         }
     };
+
+    public static void configure() {
+        path("/v1", () -> {
+            path("/client", () -> {
+                get("/available", LocalExecutor.AVAILABLE);
+                get("/launch/{region}", LocalExecutor.LAUNCH);
+            });
+            path("/config", () -> {
+                get("/load", RuleInterpreter.RELOAD);
+                get("/close", context -> Frame.getFrames()[0].dispose());
+            });
+        });
+    }
 }
