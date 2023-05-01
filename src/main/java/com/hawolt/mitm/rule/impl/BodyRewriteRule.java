@@ -1,6 +1,5 @@
 package com.hawolt.mitm.rule.impl;
 
-import com.hawolt.http.proxy.BasicProxyServer;
 import com.hawolt.logger.Logger;
 import com.hawolt.mitm.cache.InternalStorage;
 import com.hawolt.mitm.rule.AbstractRewriteRule;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  **/
 
 public class BodyRewriteRule extends AbstractRewriteRule<String, String> {
-    private String replacement, plain, name;
+    private String replacement, plain, name, prefix;
     private List<ReplacementGroup> groups;
     private Pattern pattern;
     private int key, value;
@@ -38,6 +37,7 @@ public class BodyRewriteRule extends AbstractRewriteRule<String, String> {
                 if (type == RuleType.REGEX_CACHE) {
                     this.key = object.getInt("key");
                     this.value = object.getInt("value");
+                    this.prefix = object.getString("prefix");
                 } else if (getType() == RuleType.REGEX) {
                     this.groups = object.getJSONArray("groups")
                             .toList()
@@ -100,7 +100,7 @@ public class BodyRewriteRule extends AbstractRewriteRule<String, String> {
                     Replacement rule = list.get(i);
                     String target = builder.substring(rule.getStart(), rule.getEnd());
                     builder.replace(rule.getStart(), rule.getEnd(), rule.getReplacement());
-                    Logger.info("[REWRITE] {} -> {}", target, rule.getReplacement());
+                    Logger.info("[REWRITE] {}:{} -> {}", i, target, rule.getReplacement());
                 }
                 in = builder.toString();
                 Logger.debug("[{}-RULE] {}:{} -> {}", type.name(), plain, target, getReplacement());
@@ -115,7 +115,7 @@ public class BodyRewriteRule extends AbstractRewriteRule<String, String> {
                     if (count >= Math.max(key, value)) {
                         String k = matcher.group(key);
                         String v = matcher.group(value);
-                        InternalStorage.add(k, v);
+                        InternalStorage.add(String.join("-", prefix, k), v);
                     }
                 }
                 break;

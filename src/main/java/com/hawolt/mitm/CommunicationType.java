@@ -1,7 +1,5 @@
 package com.hawolt.mitm;
 
-import com.hawolt.mitm.rule.RuleType;
-
 /**
  * Created: 22/11/2022 03:43
  * Author: Twitter @hawolt

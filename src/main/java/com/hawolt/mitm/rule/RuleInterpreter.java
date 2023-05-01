@@ -30,6 +30,15 @@ import java.util.function.Function;
  **/
 
 public class RuleInterpreter {
+    public final static Map<CommunicationType, RewriteModule<?>> map = new HashMap<CommunicationType, RewriteModule<?>>() {{
+        put(CommunicationType.INGOING, new ResponseModule());
+        put(CommunicationType.OUTGOING, new RequestModule());
+    }};
+    private final static Map<InstructionType, Function<JSONObject, IRewrite<?, ?>>> converter = new HashMap<InstructionType, Function<JSONObject, IRewrite<?, ?>>>() {{
+        put(InstructionType.HEADER, HeaderRewriteRule::new);
+        put(InstructionType.BODY, BodyRewriteRule::new);
+        put(InstructionType.CODE, CodeRewriteRule::new);
+    }};
     public static final Handler RELOAD = context -> {
         reload(context.queryParam("file"));
     };
@@ -48,17 +57,6 @@ public class RuleInterpreter {
         }
         RuleInjector.load(RunLevel.get("inject.json"));
     }
-
-    public final static Map<CommunicationType, RewriteModule<?>> map = new HashMap<CommunicationType, RewriteModule<?>>() {{
-        put(CommunicationType.INGOING, new ResponseModule());
-        put(CommunicationType.OUTGOING, new RequestModule());
-    }};
-
-    private final static Map<InstructionType, Function<JSONObject, IRewrite<?, ?>>> converter = new HashMap<InstructionType, Function<JSONObject, IRewrite<?, ?>>>() {{
-        put(InstructionType.HEADER, HeaderRewriteRule::new);
-        put(InstructionType.BODY, BodyRewriteRule::new);
-        put(InstructionType.CODE, CodeRewriteRule::new);
-    }};
 
     public static Map<InstructionType, List<IRewrite<?, ?>>> interpret(String first, JSONObject object) {
         Map<InstructionType, List<IRewrite<?, ?>>> map = new HashMap<>();
