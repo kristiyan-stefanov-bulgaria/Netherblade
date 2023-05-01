@@ -6,13 +6,13 @@ public class Pair<K, V> {
     private final K k;
     private final V v;
 
-    public static <K, V> Pair<K, V> from(K k, V v) {
-        return new Pair<>(k, v);
-    }
-
     private Pair(K k, V v) {
         this.k = k;
         this.v = v;
+    }
+
+    public static <K, V> Pair<K, V> from(K k, V v) {
+        return new Pair<>(k, v);
     }
 
     public K getKey() {
