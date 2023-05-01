@@ -105,10 +105,6 @@ public class ProxyRequest implements IRequest {
         headers.remove(key);
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
-
     @Override
     public String url() {
         return url;
@@ -130,6 +126,10 @@ public class ProxyRequest implements IRequest {
 
     public String getBody() {
         return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getUrl() {
