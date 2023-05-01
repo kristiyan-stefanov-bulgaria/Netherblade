@@ -54,10 +54,6 @@ public class ProxyResponse implements IRequest {
         return body;
     }
 
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
     public Map<String, List<String>> getHeaders() {
         return headers;
     }
@@ -65,6 +61,10 @@ public class ProxyResponse implements IRequest {
     @Override
     public String getBody() {
         return new String(body);
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
     }
 
     @Override
