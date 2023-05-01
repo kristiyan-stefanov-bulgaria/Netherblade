@@ -1,6 +1,7 @@
 # Netherblade
 
-Netherblade allows you to look behind the curtain and see requests executed by the LCU layer of the Client, additionally Netherblade can perform Man in the Middle to adjust the Requests and Responses as needed.
+Netherblade allows you to look behind the curtain and see requests executed by the LCU layer of the Client, additionally
+Netherblade can perform Man in the Middle to adjust the Requests and Responses as needed.
 
 ## Preview
 
