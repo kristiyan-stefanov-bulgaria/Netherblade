@@ -1,28 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <script crossorigin="anonymous" src="https://kit.fontawesome.com/1d7514c551.js"></script>
-    <link href="assets/styles/main.css" rel="stylesheet">
-    <script src="assets/scripts/main.js"></script>
-    <title>Netherblade</title>
-</head>
-<body>
-<div class="stack-vertical">
-    <div class="header-fixed">
-        <div class="header">
-            <input class="search-filter" id="search" placeholder="search keyword" type="text">
-            <select class="region" id="regions" name="regions"></select>
-            <button class="launcher ui-button medium" onclick="launch()">Launch Client</button>
-            <button class="reload ui-button big" onclick="config()">Reload Config</button>
-            <button class="close ui-button medium" onclick="wipe()">Reset UI</button>
-            <button class="close ui-button tiny" onclick="dispose()">X</button>
-        </div>
-    </div>
-
-    <div class="display" id="display">
-    </div>
-</div>
-</body>
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <script
+         src="https://kit.fontawesome.com/1d7514c551.js"
+         crossorigin="anonymous"
+      ></script>
+      <link rel="stylesheet" href="assets/styles/main.css" />
+      <script src="assets/scripts/main.js"></script>
+      <link
+         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+         rel="stylesheet"
+         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+         crossorigin="anonymous"
+      />
+      <script
+         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+         crossorigin="anonymous"
+      ></script>
+      <title>Netherblade</title>
+   </head>
+   <body>
+      <nav class="navbar navbar-expand-lg shadow">
+         <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+               <img
+                  src="../netherblade.png"
+                  alt="HAWOLT ALLA"
+                  width="32"
+                  height="32"
+               />
+               Netherblade
+            </a>
+            <button
+               class="navbar-toggler"
+               type="button"
+               data-bs-toggle="collapse"
+               data-bs-target="#navbarNavAltMarkup"
+               aria-controls="navbarNavAltMarkup"
+               aria-expanded="false"
+               aria-label="Toggle navigation"
+            >
+               <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+               <div class="navbar-nav column-gap-3 grid gap-0 flexing meow">
+                  <div id="spacing" class="spacing"></div>
+                  <input
+                     id="search"
+                     class="search-filter form-control me-2 searchinghelp"
+                     type="text"
+                     placeholder="search keyword"
+                  />
+                  <select
+                     class="region btn btn-light btn-s a-WHIFF"
+                     name="regions"
+                     id="regions"
+                  ></select>
+                  <button
+                     type="submit"
+                     class="launcher ui-button btn btn-primary btn-s a-WHIFF"
+                     onclick="launch()"
+                  >
+                     Launch Client
+                  </button>
+                  <button
+                     type="submit"
+                     class="reload ui-button btn-s btn btn-secondary a-WHIFF"
+                     onclick="config()"
+                  >
+                     Reload Config
+                  </button>
+                  <button
+                     type="submit"
+                     class="close ui-button btn-s btn btn-warning a-WHIFF"
+                     onclick="wipe()"
+                  >
+                     Reset UI
+                  </button>
+                  <button
+                     type="submit"
+                     class="close ui-button btn-s btn btn-danger a-WHIFF"
+                     onclick="dispose()"
+                  >
+                     X
+                  </button>
+               </div>
+            </div>
+         </div>
+      </nav>
+      <div id="flexing">
+         <div id="display" class="display main"></div>
+         <div id="display" class="display extras"></div>
+      </div>
+   </body>
 </html>
