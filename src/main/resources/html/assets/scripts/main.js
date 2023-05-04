@@ -8,7 +8,9 @@ window.onload = function () {
                 option.innerHTML = region;
                 option.value = region;
                 dropdown.appendChild(option);
-            })
+            });
+            // make euw default
+            dropdown.value = "EUW";
             // sort dropdown and make TEST always last
             let options = Array.from(dropdown.options);
             options.sort((a, b) => {
@@ -232,6 +234,19 @@ function content(value) {
             text.textContent = value;
             break
     }
+    text.onclick = function () {
+        if (text.textContent.trim().length === 0) {
+            return;
+        }
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("copy");
+        selection.removeAllRanges();
+    }
+
     body.appendChild(text);
     center.appendChild(body);
     return center;

@@ -291,6 +291,7 @@ body {
    background: #263544;
    border-radius: 8px;
    padding: 5px;
+   cursor: pointer;
 }
 
 .hidden {
