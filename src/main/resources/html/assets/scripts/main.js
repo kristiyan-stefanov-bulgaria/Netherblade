@@ -9,8 +9,6 @@ window.onload = function () {
                 option.value = region;
                 dropdown.appendChild(option);
             });
-            // make euw default
-            dropdown.value = "EUW";
             // sort dropdown and make TEST always last
             let options = Array.from(dropdown.options);
             options.sort((a, b) => {
