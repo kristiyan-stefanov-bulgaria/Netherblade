@@ -16,7 +16,6 @@ body {
 
 .display {
    overflow-y: auto;
-   background-color: red;
    width: 100%;
    height: 95%;
    margin-top: 0 !important;
@@ -33,13 +32,13 @@ body {
 }
 
 .display::-webkit-scrollbar-track {
-   background: #1f2b38;
-   border-radius: 10px;
+   background: #283a50;
+   border-radius: 0px 10px 10px 0px;
 }
 
 .display::-webkit-scrollbar-thumb {
    background: #ffffff;
-   border-radius: 10px;
+   border-radius: 0px 10px 10px 0px;
 }
 
 #flexing {
@@ -179,7 +178,6 @@ body {
 
 .main-hint {
    background-color: #1f2b38;
-   border-radius: 8px;
    text-align: center;
    display: flex;
    height: 40px;
