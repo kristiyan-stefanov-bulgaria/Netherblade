@@ -18,10 +18,28 @@ body {
    overflow-y: auto;
    background-color: red;
    width: 100%;
-   height: 90%;
+   height: 95%;
    margin-top: 0 !important;
    flex-direction: column;
    border-radius: 8px;
+}
+
+#regions {
+   text-align: left;
+}
+
+.display::-webkit-scrollbar {
+   width: 0.6rem;
+}
+
+.display::-webkit-scrollbar-track {
+   background: #1f2b38;
+   border-radius: 10px;
+}
+
+.display::-webkit-scrollbar-thumb {
+   background: #ffffff;
+   border-radius: 10px;
 }
 
 #flexing {
@@ -32,6 +50,26 @@ body {
    align-items: center;
    align-content: center;
    height: 100%;
+}
+
+.main {
+   display: block;
+}
+
+.extras {
+   display: none;
+}
+
+.mitm {
+   display: none;
+}
+
+.settings {
+   display: none;
+}
+
+.console {
+   display: none;
 }
 
 .spacing {
@@ -197,10 +235,14 @@ body {
    cursor: pointer;
 }
 
+.request {
+   color: #ffffff !important;
+}
+
 .requestdata {
    border-right: 1px solid #1f2b38;
    border-radius: 8px 0px 0px 8px;
-   background-color: #4d6278;
+   background-color: #354557;
    width: 50%;
 }
 
