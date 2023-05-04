@@ -9,6 +9,17 @@ window.onload = function () {
                 option.value = region;
                 dropdown.appendChild(option);
             })
+            // sort dropdown and make TEST always last
+            let options = Array.from(dropdown.options);
+            options.sort((a, b) => {
+                if (a.value === "TEST") return 1;
+                if (b.value === "TEST") return -1;
+                return a.value.localeCompare(b.value);
+            });
+            dropdown.innerHTML = "";
+            for (const option of options) {
+                dropdown.appendChild(option);
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
