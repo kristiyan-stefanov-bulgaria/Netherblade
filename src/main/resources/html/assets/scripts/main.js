@@ -37,6 +37,10 @@ window.onload = function () {
     search.addEventListener('keyup', filter);
 }
 
+function logging(type) {
+    console.log("Clicked navbar with " + type);
+}
+
 function call(url) {
     fetch(url)
         .catch((error) => {
@@ -436,5 +440,6 @@ function formatXml(xml) {
         formatted += padding + node + '\r\n';
         pad += indent;
     }
+
     return formatted;
 }
