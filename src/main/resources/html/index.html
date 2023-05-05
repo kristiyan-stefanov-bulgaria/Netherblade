@@ -23,7 +23,8 @@
       <title>Netherblade</title>
    </head>
    <body>
-      <nav class="navbar navbar-expand-lg shadow" id="inting" onclick="logging('click')" ondrag="logging('drag')" ondragend="logging('dragend')" onmousemove="logging('mousemove')">
+      <nav
+         class="navbar navbar-expand-lg shadow" id="inting">
          <div class="container-fluid">
             <a class="navbar-brand" href="#">
                <img
@@ -59,6 +60,15 @@
                      name="regions"
                      id="regions"
                   ></select>
+                  <select class="methodsFilter btn btn-light a-WHIFF text-nowrap" id="methodsFilter" name="methodsFilter">
+                     <option value="ALL" title="ALL">ALL</option>
+                     <option value="GET" title="GET">GET</option>
+                     <option value="PUT" title="PUT">PUT</option>
+                     <option value="POST" title="POST">POST</option>
+                     <option value="RMS" title="RMS">RMS</option>
+                     <option value="XMPP" title="XMPP">XMPP</option>
+                     <option value="RTMP" title="RTMP">RTMP</option>
+                  </select>
                   <button
                      type="submit"
                      class="launcher ui-button btn btn-primary a-WHIFF text-nowrap"
@@ -90,13 +100,10 @@
                </div>
             </div>
          </div>
-        </nav>
-      <div id="flexing">
-         <div id="display" class="display main"></div>
-         <div id="display" class="display extras"></div>
-         <div id="display" class="display mitm"></div>
-         <div id="display" class="display settings"></div>
-         <div id="display" class="display console"></div>
+      </nav>
+      <div id="topelement">
+         <div id="display" class="main"></div>
+         <div id="display" class="mitm"></div>
       </div>
    </body>
 </html>
