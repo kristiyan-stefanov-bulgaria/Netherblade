@@ -142,11 +142,17 @@ body {
 
 .a-WHIFF {
    font-size: 0.8rem !important;
+   display: inline-block;
+}
+
+.btn-warning {
+   color: white !important;
 }
 
 .btn {
    height: fit-content !important;
    width: fit-content !important;
+   font-size: 0.8rem !important;
 }
 
 .stack-vertical {
