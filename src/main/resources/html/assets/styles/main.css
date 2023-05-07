@@ -30,8 +30,7 @@ body {
    justify-content: space-between;
    align-items: center;
    align-content: center;
-   height: 93.3vh !important;
-   margin-bottom: 1vh !important;
+   height: inherit;
 }
 
 #regions {
@@ -40,7 +39,6 @@ body {
 
 #display::-webkit-scrollbar {
    width: 0.6rem;
-   height: 100vh;
 }
 
 #display::-webkit-scrollbar-track {
@@ -75,6 +73,12 @@ body {
 
 .spacing {
    width: 1rem;
+}
+
+.jwt-button {
+   border-radius: 8px;
+   height: 28px;
+   margin-left: 5px;
 }
 
 .region {
