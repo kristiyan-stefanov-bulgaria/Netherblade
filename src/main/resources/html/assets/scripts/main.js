@@ -299,6 +299,72 @@ function header(title, type) {
     return header;
 }
 
+function JWTHandler(target, body) {
+    const jwtRegex = /eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+\/=]*/gm;
+    let match;
+
+    while ((match = jwtRegex.exec(body)) !== null) {
+        if (match.index === jwtRegex.lastIndex) {
+            jwtRegex.lastIndex++;
+        }
+
+        match.forEach((match, groupIndex) => {
+            appendJWTDecodeButton(target, match);
+        });
+    }
+}
+
+function appendJWTDecodeButton(parent, token) {
+    const jwtButton = document.createElement("button");
+    jwtButton.className = "jwt-button";
+    jwtButton.innerHTML = "Decode JWT";
+
+    jwtButton.onclick = function () {
+        const isToggled = jwtButton.classList.contains("toggled");
+        
+        if (isToggled) {
+            jwtButton.classList.remove("toggled");
+            const decodedJWTString = jwtButton.getAttribute("decodedJwt");
+            const originalJWT = jwtButton.getAttribute("originalJwt");
+
+            replaceTextContent(parent, decodedJWTString, originalJWT)
+            replaceTextContent(jwtButton, "Original JWT", "Decode JWT")
+        } else {
+            const decodedJWT = decodeJWT(token);
+            const decodedJWTString = JSON.stringify(decodedJWT, null, 2);
+    
+            jwtButton.setAttribute("originalJwt", token);
+            jwtButton.setAttribute("decodedJwt", decodedJWTString);
+            replaceTextContent(parent, token, decodedJWTString);
+            replaceTextContent(jwtButton, "Decode JWT", "Original JWT")
+            jwtButton.classList.add("toggled");
+        }
+    };
+    parent.appendChild(jwtButton);
+}
+
+function replaceTextContent(element, searchText, replacementText) {
+    const nodeIterator = document.createNodeIterator(element, NodeFilter.SHOW_TEXT);
+    let currentNode;
+
+    while ((currentNode = nodeIterator.nextNode())) {
+        if (currentNode.nodeValue.includes(searchText)) {
+            const newNode = document.createTextNode(currentNode.nodeValue.replace(searchText, replacementText));
+            currentNode.parentNode.replaceChild(newNode, currentNode);
+        }
+    }
+}
+
+function decodeJWT(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
 function left(request) {
     const left = document.createElement("div");
     left.className = "requestdata";
@@ -326,6 +392,9 @@ function left(request) {
         const header = document.createElement("div");
         header.className = "request-value";
         header.innerHTML = key + ": " + value;
+
+        JWTHandler(header ,value)
+
         headers.appendChild(header);
     }
     left.appendChild(headers);
@@ -346,6 +415,9 @@ function left(request) {
             text.textContent = value;
             break
     }
+
+    JWTHandler(text ,value)
+
     body.appendChild(text);
     left.appendChild(body);
     return left;
@@ -364,6 +436,9 @@ function right(response) {
         let value = fields[i]['v'];
         const header = document.createElement("div");
         header.className = "request-value";
+
+        JWTHandler(header ,value)
+
         header.innerHTML = key + ": " + value;
         headers.appendChild(header);
     }
@@ -385,6 +460,9 @@ function right(response) {
             text.textContent = value;
             break
     }
+
+    JWTHandler(text ,value)
+
     body.appendChild(text);
     right.appendChild(body);
     return right;
