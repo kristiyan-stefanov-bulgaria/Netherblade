@@ -12,6 +12,14 @@
 <div class="stack-vertical">
     <div class="header-fixed">
         <div class="header">
+            <select class="methodsFilter" id="methodsFilter" name="methodsFilter">
+                <option value="ALL" title="ALL">ALL</option>
+                <option value="GET" title="GET">GET</option>
+                <option value="POST" title="POST">POST</option>
+                <option value="RMS" title="RMS">RMS</option>
+                <option value="XMPP" title="XMPP">XMPP</option>
+                <option value="RTMP" title="RTMP">RTMP</option>
+            </select>
             <input class="search-filter" id="search" placeholder="search keyword" type="text">
             <select class="region" id="regions" name="regions"></select>
             <button class="launcher ui-button medium" onclick="launch()">Launch Client</button>

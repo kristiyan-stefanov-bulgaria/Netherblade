@@ -3,6 +3,7 @@ window.onload = function () {
         .then((response) => response.json())
         .then((data) => {
             const dropdown = document.getElementById('regions');
+            data['regions'].sort();
             data['regions'].forEach((region) => {
                 let option = document.createElement("option");
                 option.innerHTML = region;
@@ -24,6 +25,9 @@ window.onload = function () {
     });
     var search = document.getElementById('search');
     search.addEventListener('keyup', filter);
+
+    var methodsFilter = document.getElementById('methodsFilter');
+    methodsFilter.addEventListener('change', methodsFilterHandler);
 }
 
 function call(url) {
@@ -45,22 +49,44 @@ function wipe() {
     document.getElementById('display').innerHTML = "";
 }
 
+function methodsFilterHandler() {
+    const methodsFilter = document.getElementById('methodsFilter');
+    const display = document.getElementById('display');
+    const children = Array.from(display.childNodes);
+  
+    children.forEach((child) => {
+      if (child.outerHTML === undefined) return;
+      const method = child.querySelector('.method').innerHTML.toLowerCase();
+      const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
+      toggleHiddenClass(child, shouldShow);
+    });
+}
+
 function filter() {
-    var display = document.getElementById('display');
-    var children = display.childNodes;
-    var query = search.value.toLowerCase();
-    for (var i = 0; i < children.length; i++) {
-        var ref = children[i];
-        if (ref.outerHTML === undefined) continue;
-        var source = ref.outerHTML.toLowerCase();
-        if (source.includes(query)) {
-            if (ref.classList.contains("hidden")) ref.classList.remove("hidden")
-        } else {
-            if (!ref.classList.contains("hidden")) ref.classList.add("hidden")
+    const display = document.getElementById('display');
+    const children = Array.from(display.childNodes);
+    const query = search.value.toLowerCase();
+
+    children.forEach((child) => {
+        if (child.outerHTML === undefined) return;
+        const source = child.outerHTML.toLowerCase();
+        const shouldShow = source.includes(query);
+        toggleHiddenClass(child, shouldShow);
+    });
+}
+
+function toggleHiddenClass(element, shouldShow) {
+    if (shouldShow) {
+        if (element.classList.contains('hidden')) {
+            element.classList.remove('hidden');
+        }
+    } else {
+        if (!element.classList.contains('hidden')) {
+            element.classList.add('hidden');
         }
     }
 }
-
+  
 function flip(e) {
     for (const child of e.children) {
         child.classList.toggle('hidden');
@@ -108,6 +134,7 @@ function connect(host) {
             console.log("unknown protocol: " + json['protocol']);
         }
         filter();
+        methodsFilterHandler();
     };
     socket.onclose = function (msg) {
         console.log("disconnected from " + host);
