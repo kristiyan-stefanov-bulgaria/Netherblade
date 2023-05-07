@@ -86,12 +86,12 @@ function methodsFilterHandler() {
     const methodsFilter = document.getElementById('methodsFilter');
     const display = document.getElementById('display');
     const children = Array.from(display.childNodes);
-
     children.forEach((child) => {
-        if (child.outerHTML === undefined) return;
-        const method = child.querySelector('.method').innerHTML.toLowerCase();
-        const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
-        toggleHiddenClass(child, shouldShow);
+      if (child.outerHTML === undefined) return;
+      const method = child.querySelector('.method').innerHTML.toLowerCase();
+      const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
+      toggleHiddenClass(child, shouldShow);
+
     });
 }
 
@@ -119,7 +119,7 @@ function toggleHiddenClass(element, shouldShow) {
         }
     }
 }
-
+  
 function flip(e) {
     for (const child of e.children) {
         child.classList.toggle('hidden');
@@ -377,7 +377,7 @@ function appendJWTDecodeButton(parent, token) {
         } else {
             const decodedJWT = decodeJWT(token);
             const decodedJWTString = JSON.stringify(decodedJWT, null, 2);
-
+            
             jwtButton.setAttribute("originalJwt", token);
             jwtButton.setAttribute("decodedJwt", decodedJWTString);
             replaceTextContent(parent, token, decodedJWTString);
@@ -460,10 +460,12 @@ function left(request) {
             text.textContent = value;
             break
     }
+    
     if (value.length === 0) {
         text.textContent = "Empty Body";
     }
     JWTHandler(text ,value)
+
     body.appendChild(text);
     left.appendChild(body);
     return left;
@@ -506,10 +508,12 @@ function right(response) {
             text.textContent = value;
             break
     }
+   
     if (value.length === 0) {
         text.textContent = "Empty Body";
     }
     JWTHandler(text ,value)
+
     body.appendChild(text);
     right.appendChild(body);
     return right;
