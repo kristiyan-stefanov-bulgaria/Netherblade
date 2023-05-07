@@ -25,6 +25,7 @@ window.onload = function () {
         .then((response) => response.json())
         .then((data) => {
             const dropdown = document.getElementById('regions');
+            data['regions'].sort();
             data['regions'].forEach((region) => {
                 let option = document.createElement("option");
                 if (region === "EUW") option.selected = true;
@@ -58,6 +59,9 @@ window.onload = function () {
     });
     var search = document.getElementById('search');
     search.addEventListener('keyup', filter);
+
+    var methodsFilter = document.getElementById('methodsFilter');
+    methodsFilter.addEventListener('change', methodsFilterHandler);
 }
 function call(url) {
     fetch(url)
