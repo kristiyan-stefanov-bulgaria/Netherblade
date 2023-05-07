@@ -1,4 +1,26 @@
+let socket;
+
+function handle(i, e) {
+    if (!e.target.matches('.navbar')) return
+    let json = new Object();
+    json.type = i;
+    json.x = e.clientX;
+    json.y = e.clientY;
+    json.moveX = e.movementX;
+    json.moveY = e.movementY;
+    socket.send(JSON.stringify(json));
+}
+
 window.onload = function () {
+    addEventListener("mousemove", e => {
+        handle(1, e)
+    });
+    addEventListener("mousedown", e => {
+        handle(2, e)
+    });
+    addEventListener("click", e => {
+        handle(3, e)
+    });
     fetch('http://localhost:35199/v1/client/available')
         .then((response) => response.json())
         .then((data) => {
@@ -6,10 +28,22 @@ window.onload = function () {
             data['regions'].sort();
             data['regions'].forEach((region) => {
                 let option = document.createElement("option");
+                if (region === "EUW") option.selected = true;
                 option.innerHTML = region;
                 option.value = region;
                 dropdown.appendChild(option);
-            })
+            });
+            // sort dropdown and make TEST always last
+            let options = Array.from(dropdown.options);
+            options.sort((a, b) => {
+                if (a.value === "TEST") return 1;
+                if (b.value === "TEST") return -1;
+                return a.value.localeCompare(b.value);
+            });
+            dropdown.innerHTML = "";
+            for (const option of options) {
+                dropdown.appendChild(option);
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -29,7 +63,6 @@ window.onload = function () {
     var methodsFilter = document.getElementById('methodsFilter');
     methodsFilter.addEventListener('change', methodsFilterHandler);
 }
-
 function call(url) {
     fetch(url)
         .catch((error) => {
@@ -53,12 +86,12 @@ function methodsFilterHandler() {
     const methodsFilter = document.getElementById('methodsFilter');
     const display = document.getElementById('display');
     const children = Array.from(display.childNodes);
-  
     children.forEach((child) => {
       if (child.outerHTML === undefined) return;
       const method = child.querySelector('.method').innerHTML.toLowerCase();
       const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
       toggleHiddenClass(child, shouldShow);
+
     });
 }
 
@@ -116,7 +149,7 @@ function launch() {
 }
 
 function connect(host) {
-    let socket = new WebSocket(host);
+    socket = new WebSocket(host);
     socket.onopen = function (msg) {
         console.log("Connected to " + host);
     };
@@ -248,6 +281,18 @@ function content(value) {
             text.textContent = value;
             break
     }
+    text.onclick = function () {
+        if (text.textContent.trim().length === 0 || text.textContent === "Empty Body") {
+            return;
+        }
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("copy");
+        selection.removeAllRanges();
+    }
     body.appendChild(text);
     center.appendChild(body);
     return center;
@@ -321,7 +366,7 @@ function appendJWTDecodeButton(parent, token) {
 
     jwtButton.onclick = function () {
         const isToggled = jwtButton.classList.contains("toggled");
-        
+
         if (isToggled) {
             jwtButton.classList.remove("toggled");
             const decodedJWTString = jwtButton.getAttribute("decodedJwt");
@@ -332,7 +377,7 @@ function appendJWTDecodeButton(parent, token) {
         } else {
             const decodedJWT = decodeJWT(token);
             const decodedJWTString = JSON.stringify(decodedJWT, null, 2);
-    
+            
             jwtButton.setAttribute("originalJwt", token);
             jwtButton.setAttribute("decodedJwt", decodedJWTString);
             replaceTextContent(parent, token, decodedJWTString);
@@ -415,7 +460,10 @@ function left(request) {
             text.textContent = value;
             break
     }
-
+    
+    if (value.length === 0) {
+        text.textContent = "Empty Body";
+    }
     JWTHandler(text ,value)
 
     body.appendChild(text);
@@ -460,13 +508,29 @@ function right(response) {
             text.textContent = value;
             break
     }
-
+   
+    if (value.length === 0) {
+        text.textContent = "Empty Body";
+    }
     JWTHandler(text ,value)
 
     body.appendChild(text);
     right.appendChild(body);
     return right;
 }
+
+window.addEventListener('resize', function() {
+    var element = document.getElementById('topelement');
+    var windowHeight = window.innerHeight;
+    var elementHeight = element.scrollHeight;
+    var maxAllowedHeight = windowHeight * 0.9;
+
+    if (elementHeight > maxAllowedHeight) {
+        element.style.maxHeight = maxAllowedHeight + 'px';
+    } else {
+        element.style.maxHeight = '90vh';
+    }
+});
 
 function expand() {
     const expand = document.createElement("div");
