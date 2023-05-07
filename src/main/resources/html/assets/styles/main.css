@@ -30,6 +30,22 @@ html, body {
     gap: 10px;
 }
 
+.methodsFilter {
+    border-radius: 8px;
+    height: 28px;
+    padding-left: 5px;
+}
+
+.methodsFilter option {
+    padding: 10px;
+}
+
+.jwt-button {
+    border-radius: 8px;
+    height: 28px;
+    margin-left: 5px;
+}
+
 .search-filter {
     border-radius: 8px;
     width: 100%;
