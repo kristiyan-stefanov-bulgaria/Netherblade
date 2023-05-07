@@ -75,6 +75,10 @@ body {
    width: 1rem;
 }
 
+.data {
+   width: -webkit-fill-available;
+}
+
 .jwt-button {
    border-radius: 8px;
    height: 28px;

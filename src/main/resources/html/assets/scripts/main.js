@@ -149,7 +149,7 @@ function launch() {
 }
 
 function connect(host) {
-    let socket = new WebSocket(host);
+    socket = new WebSocket(host);
     socket.onopen = function (msg) {
         console.log("Connected to " + host);
     };
