@@ -9,15 +9,16 @@ body {
    height: 100%;
    width: 100%;
    margin: 0px;
-   padding: 5px;
+   padding: 0px;
    max-width: 100%;
    overflow: hidden;
 }
 
 .display {
-   overflow-y: auto;
+   overflow-y: scroll;
    width: 100%;
-   height: 95%;
+   background: red;
+   height: 100rem;
    margin-top: 0 !important;
    flex-direction: column;
    border-radius: 8px;
@@ -82,7 +83,7 @@ body {
    border-color: #e0e0e0 !important;
 }
 
-.region:hover {
+.region:hover, .methodsFilter:hover {
    background-color: #ffffff !important;
    border-color: black !important;
 }
@@ -111,11 +112,13 @@ body {
    transition: all 0.5s ease-in-out;
    border-radius: 0rem;
    width: 100%;
+   margin: 0 !important;
 }
+
+
 
 .navbar:hover {
    background-color: #ffffff !important;
-   border-radius: 1rem;
 }
 
 .searchinghelp {
@@ -206,6 +209,12 @@ body {
    border-radius: 8px;
    padding: 5px;
    width: 70px;
+}
+
+.methodsFilter {
+   background-color: #e0e0e0 !important;
+   border-color: #e0e0e0 !important;
+   text-align: left !important;
 }
 
 .uri {
