@@ -1,13 +1,13 @@
 let socket;
 
 function handle(i, e) {
-    if (!e.target.matches('.navbar')) return
     let json = new Object();
     json.type = i;
     json.x = e.clientX;
     json.y = e.clientY;
     json.moveX = e.movementX;
     json.moveY = e.movementY;
+    json.navbar = e.target.matches('.navbar');
     socket.send(JSON.stringify(json));
 }
 
