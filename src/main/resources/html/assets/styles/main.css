@@ -8,48 +8,49 @@ body {
    display: block;
    height: 100%;
    width: 100%;
-   margin: 0px;
-   padding: 0px;
+   margin: 0;
+   padding: 0;
    max-width: 100%;
    overflow: hidden;
 }
 
-.display {
+#display {
    overflow-y: scroll;
    width: 100%;
-   background: red;
-   height: 100rem;
    margin-top: 0 !important;
-   flex-direction: column;
    border-radius: 8px;
+   height: 100%;
 }
 
-#regions {
-   text-align: left;
-}
 
-.display::-webkit-scrollbar {
-   width: 0.6rem;
-}
-
-.display::-webkit-scrollbar-track {
-   background: #283a50;
-   border-radius: 0px 10px 10px 0px;
-}
-
-.display::-webkit-scrollbar-thumb {
-   background: #ffffff;
-   border-radius: 0px 10px 10px 0px;
-}
-
-#flexing {
+#topelement {
    width: 100%;
    display: flex;
    flex-direction: row;
    justify-content: space-between;
    align-items: center;
    align-content: center;
-   height: 100%;
+   height: 93.3vh !important;
+   margin-bottom: 1vh !important;
+}
+
+#regions {
+   text-align: left;
+}
+
+#display::-webkit-scrollbar {
+   width: 0.6rem;
+   height: 100vh;
+}
+
+#display::-webkit-scrollbar-track {
+   background: #283a50;
+   border-radius: 10px;
+}
+
+#display::-webkit-scrollbar-thumb {
+   background: #ffffff;
+   border-radius: 10px;
 }
 
 .main {
@@ -114,8 +115,6 @@ body {
    width: 100%;
    margin: 0 !important;
 }
-
-
 
 .navbar:hover {
    background-color: #ffffff !important;
