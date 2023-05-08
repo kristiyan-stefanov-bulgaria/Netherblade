@@ -5,6 +5,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import javax.swing.*;
 import java.net.InetSocketAddress;
 
 /**
@@ -14,7 +15,6 @@ import java.net.InetSocketAddress;
 
 public class SocketServer extends WebSocketServer {
     private static SocketServer instance;
-
     public SocketServer(InetSocketAddress address) {
         super(address);
     }
@@ -40,7 +40,7 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        Logger.debug("Chromium sent us: {}", message);
+        Netherblade.redirect(message);
     }
 
     @Override
