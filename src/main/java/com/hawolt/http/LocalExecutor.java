@@ -9,6 +9,7 @@ import com.hawolt.mitm.CommunicationType;
 import com.hawolt.mitm.InstructionType;
 import com.hawolt.mitm.Unsafe;
 import com.hawolt.mitm.rule.RuleInterpreter;
+import com.hawolt.ui.Netherblade;
 import com.hawolt.ui.SocketServer;
 import com.hawolt.util.LocaleInstallation;
 import com.hawolt.util.StaticConstants;
@@ -16,7 +17,9 @@ import com.hawolt.yaml.SystemYaml;
 import io.javalin.http.Handler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sun.nio.ch.Net;
 
+import javax.swing.*;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.*;
 import java.io.FileWriter;
@@ -168,6 +171,9 @@ public class LocalExecutor {
         }
     };
 
+    private static boolean toggle;
+    private static Rectangle bounds;
+
     public static void configure() {
         path("/v1", () -> {
             path("/client", () -> {
@@ -177,6 +183,22 @@ public class LocalExecutor {
             path("/config", () -> {
                 get("/load", RuleInterpreter.RELOAD);
                 get("/close", context -> System.exit(0));
+                get("/minimize", context -> Netherblade.frame.setState(JFrame.ICONIFIED));
+                get("/maximize", context -> {
+                    LocalExecutor.toggle = !LocalExecutor.toggle;
+                    if (LocalExecutor.toggle) {
+                        LocalExecutor.bounds = Netherblade.frame.getBounds();
+                        DisplayMode mode = Netherblade.frame.getGraphicsConfiguration().getDevice().getDisplayMode();
+                        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(Netherblade.frame.getGraphicsConfiguration());
+                        Netherblade.frame.setMaximizedBounds(new Rectangle(
+                                mode.getWidth() - insets.right - insets.left,
+                                mode.getHeight() - insets.top - insets.bottom
+                        ));
+                        Netherblade.frame.setExtendedState(Netherblade.frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                    } else {
+                        Netherblade.frame.setBounds(LocalExecutor.bounds);
+                    }
+                });
             });
         });
     }
