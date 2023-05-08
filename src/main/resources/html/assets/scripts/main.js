@@ -63,6 +63,7 @@ window.onload = function () {
     var methodsFilter = document.getElementById('methodsFilter');
     methodsFilter.addEventListener('change', methodsFilterHandler);
 }
+
 function call(url) {
     fetch(url)
         .catch((error) => {
@@ -72,6 +73,14 @@ function call(url) {
 
 function dispose() {
     call('http://localhost:35199/v1/config/close');
+}
+
+function maximize() {
+    call('http://localhost:35199/v1/config/maximize');
+}
+
+function minimize() {
+    call('http://localhost:35199/v1/config/minimize');
 }
 
 function config() {
@@ -87,10 +96,10 @@ function methodsFilterHandler() {
     const display = document.getElementById('display');
     const children = Array.from(display.childNodes);
     children.forEach((child) => {
-      if (child.outerHTML === undefined) return;
-      const method = child.querySelector('.method').innerHTML.toLowerCase();
-      const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
-      toggleHiddenClass(child, shouldShow);
+        if (child.outerHTML === undefined) return;
+        const method = child.querySelector('.method').innerHTML.toLowerCase();
+        const shouldShow = method === methodsFilter.value.toLowerCase() || methodsFilter.value.toLowerCase() === 'all';
+        toggleHiddenClass(child, shouldShow);
 
     });
 }
@@ -119,7 +128,7 @@ function toggleHiddenClass(element, shouldShow) {
         }
     }
 }
-  
+
 function flip(e) {
     for (const child of e.children) {
         child.classList.toggle('hidden');
@@ -377,7 +386,7 @@ function appendJWTDecodeButton(parent, token) {
         } else {
             const decodedJWT = decodeJWT(token);
             const decodedJWTString = JSON.stringify(decodedJWT, null, 2);
-            
+
             jwtButton.setAttribute("originalJwt", token);
             jwtButton.setAttribute("decodedJwt", decodedJWTString);
             replaceTextContent(parent, token, decodedJWTString);
@@ -403,7 +412,7 @@ function replaceTextContent(element, searchText, replacementText) {
 function decodeJWT(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
@@ -438,7 +447,7 @@ function left(request) {
         header.className = "request-value";
         header.innerHTML = key + ": " + value;
 
-        JWTHandler(header ,value)
+        JWTHandler(header, value)
 
         headers.appendChild(header);
     }
@@ -460,11 +469,11 @@ function left(request) {
             text.textContent = value;
             break
     }
-    
+
     if (value.length === 0) {
         text.textContent = "Empty Body";
     }
-    JWTHandler(text ,value)
+    JWTHandler(text, value)
 
     body.appendChild(text);
     left.appendChild(body);
@@ -485,7 +494,7 @@ function right(response) {
         const header = document.createElement("div");
         header.className = "request-value";
 
-        JWTHandler(header ,value)
+        JWTHandler(header, value)
 
         header.innerHTML = key + ": " + value;
         headers.appendChild(header);
@@ -508,18 +517,18 @@ function right(response) {
             text.textContent = value;
             break
     }
-   
+
     if (value.length === 0) {
         text.textContent = "Empty Body";
     }
-    JWTHandler(text ,value)
+    JWTHandler(text, value)
 
     body.appendChild(text);
     right.appendChild(body);
     return right;
 }
 
-window.addEventListener('resize', function() {
+window.addEventListener('resize', function () {
     var element = document.getElementById('topelement');
     var windowHeight = window.innerHeight;
     var elementHeight = element.scrollHeight;
