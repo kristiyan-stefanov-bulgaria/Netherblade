@@ -167,7 +167,13 @@ function connect(host) {
         console.log("Connected to " + host);
     };
     socket.onmessage = function (msg) {
-        const json = JSON.parse(msg.data);
+        const json = JSON.parse(msg.data);// data
+
+        if (json.type === "rules") {
+            console.log("haha")
+            return;
+        }
+
         if (json['protocol'] === 'http') {
             appendHTML(json);
         } else if (json['protocol'] === 'rtmp') {

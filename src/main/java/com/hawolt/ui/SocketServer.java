@@ -1,12 +1,15 @@
 package com.hawolt.ui;
 
 import com.hawolt.logger.Logger;
+import kotlin.collections.ArrayDeque;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import javax.swing.*;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created: 19/11/2022 21:19
@@ -15,6 +18,10 @@ import java.net.InetSocketAddress;
 
 public class SocketServer extends WebSocketServer {
     private static SocketServer instance;
+    private static boolean isOpen;
+
+    private static List<String> messageQueue = new ArrayList<>();
+
     public SocketServer(InetSocketAddress address) {
         super(address);
     }
@@ -25,11 +32,22 @@ public class SocketServer extends WebSocketServer {
     }
 
     public static void forward(String message) {
-        instance.broadcast(message);
+        if (isOpen) {
+            instance.broadcast(message);
+        } else {
+            messageQueue.add(message);
+            Logger.debug("Trying to send message when the connection isn't open");
+        }
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        isOpen = true;
+
+        for (String message : messageQueue) {
+            instance.broadcast(message);
+        }
+
         Logger.debug("Chromium connected to local WebSocket server");
     }
 
