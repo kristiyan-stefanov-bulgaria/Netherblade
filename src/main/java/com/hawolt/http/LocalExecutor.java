@@ -176,7 +176,7 @@ public class LocalExecutor {
             });
             path("/config", () -> {
                 get("/load", RuleInterpreter.RELOAD);
-                get("/close", context -> Frame.getFrames()[0].dispose());
+                get("/close", context -> System.exit(0));
             });
         });
     }
