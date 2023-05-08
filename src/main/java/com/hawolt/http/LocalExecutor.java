@@ -11,6 +11,7 @@ import com.hawolt.mitm.Unsafe;
 import com.hawolt.mitm.rule.RuleInterpreter;
 import com.hawolt.ui.Netherblade;
 import com.hawolt.ui.SocketServer;
+import com.hawolt.util.Browser;
 import com.hawolt.util.LocaleInstallation;
 import com.hawolt.util.StaticConstants;
 import com.hawolt.yaml.SystemYaml;
@@ -183,6 +184,7 @@ public class LocalExecutor {
                 get("/close", context -> System.exit(0));
                 get("/minimize", Netherblade.MINIMIZE);
                 get("/maximize", Netherblade.MAXIMIZE);
+                get("/wiki", context -> Browser.navigate("https://github.com/Riotphobia/Netherblade/wiki"));
             });
         });
     }

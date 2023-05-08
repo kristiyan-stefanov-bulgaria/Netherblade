@@ -83,6 +83,10 @@ function minimize() {
     call('http://localhost:35199/v1/config/minimize');
 }
 
+function wiki() {
+    call('http://localhost:35199/v1/config/wiki');
+}
+
 function config() {
     call('http://localhost:35199/v1/config/load');
 }
