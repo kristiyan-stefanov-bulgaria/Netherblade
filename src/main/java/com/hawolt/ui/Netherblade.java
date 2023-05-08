@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+    
 /**
  * Created: 31/07/2022 00:11
  * Author: Twitter @hawolt
@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 
 public class Netherblade {
 
-    private static JFrame frame;
+    public static JFrame frame;
 
     public static void create() throws IOException {
         JFrame frame = new JFrame();
