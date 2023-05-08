@@ -49,8 +49,6 @@ public class Netherblade {
         frame.setVisible(true);
         Path path = Paths.get(System.getProperty("java.io.tmpdir")).resolve("jcef-bundle");
         try {
-            //frame.addMouseListener(new ResizeAdapter((JComponent) container));
-            //frame.addMouseMotionListener(new ResizeAdapter((JComponent) container));
             Chromium chromium = new Chromium("http://127.0.0.1:35199", path, handler);
             container.removeAll();
             container.setPreferredSize(new Dimension(1000, 620));
@@ -81,7 +79,6 @@ public class Netherblade {
 
     public static void redirect(String message) {
         JSONObject object = new JSONObject(message);
-        Logger.error("{}, {}", isHolding, object);
         int opCode = object.getInt("type");
         if (opCode >= 1 || opCode <= 3) {
             boolean navbar = object.getBoolean("navbar");
