@@ -171,8 +171,6 @@ public class LocalExecutor {
         }
     };
 
-    private static boolean toggle;
-    private static Rectangle bounds;
 
     public static void configure() {
         path("/v1", () -> {
@@ -183,22 +181,8 @@ public class LocalExecutor {
             path("/config", () -> {
                 get("/load", RuleInterpreter.RELOAD);
                 get("/close", context -> System.exit(0));
-                get("/minimize", context -> Netherblade.frame.setState(JFrame.ICONIFIED));
-                get("/maximize", context -> {
-                    LocalExecutor.toggle = !LocalExecutor.toggle;
-                    if (LocalExecutor.toggle) {
-                        LocalExecutor.bounds = Netherblade.frame.getBounds();
-                        DisplayMode mode = Netherblade.frame.getGraphicsConfiguration().getDevice().getDisplayMode();
-                        Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(Netherblade.frame.getGraphicsConfiguration());
-                        Netherblade.frame.setMaximizedBounds(new Rectangle(
-                                mode.getWidth() - insets.right - insets.left,
-                                mode.getHeight() - insets.top - insets.bottom
-                        ));
-                        Netherblade.frame.setExtendedState(Netherblade.frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-                    } else {
-                        Netherblade.frame.setBounds(LocalExecutor.bounds);
-                    }
-                });
+                get("/minimize", Netherblade.MINIMIZE);
+                get("/maximize", Netherblade.MAXIMIZE);
             });
         });
     }

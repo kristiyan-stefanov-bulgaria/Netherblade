@@ -1,7 +1,9 @@
 package com.hawolt.ui;
 
+import com.hawolt.http.LocalExecutor;
 import com.hawolt.logger.Logger;
 import com.hawolt.util.RunLevel;
+import io.javalin.http.Handler;
 import me.friwi.jcefmaven.CefInitializationException;
 import me.friwi.jcefmaven.UnsupportedPlatformException;
 import org.cef.CefApp;
@@ -15,7 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-    
+
 /**
  * Created: 31/07/2022 00:11
  * Author: Twitter @hawolt
@@ -23,6 +25,24 @@ import java.nio.file.Paths;
 
 public class Netherblade {
 
+    private static boolean toggle;
+    private static Rectangle previous;
+    public static final Handler MINIMIZE = context -> Netherblade.frame.setState(JFrame.ICONIFIED);
+    public static final Handler MAXIMIZE = context -> {
+        Netherblade.toggle = !Netherblade.toggle;
+        if (Netherblade.toggle) {
+            Netherblade.previous = Netherblade.frame.getBounds();
+            DisplayMode mode = Netherblade.frame.getGraphicsConfiguration().getDevice().getDisplayMode();
+            Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(Netherblade.frame.getGraphicsConfiguration());
+            Netherblade.frame.setMaximizedBounds(new Rectangle(
+                    mode.getWidth() - insets.right - insets.left,
+                    mode.getHeight() - insets.top - insets.bottom
+            ));
+            Netherblade.frame.setExtendedState(Netherblade.frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        } else {
+            Netherblade.frame.setBounds(Netherblade.previous);
+        }
+    };
     public static JFrame frame;
 
     public static void create() throws IOException {
